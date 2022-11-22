@@ -103,7 +103,8 @@ class ResourceServiceTest {
     void shouldGetSong() throws IOException {
         long id = 1L;
         File song = ResourceUtils.getFile("classpath:files/mpthreetest.mp3");
-        when(resourceRepository.findNameById(id)).thenReturn(Optional.of(song.getName()));
+        when(resourceRepository.findById(id)).thenReturn(Optional.of(new Resource.Builder(song.toPath().toString(),
+                song.getName()).build()));
 
         when(storageRepository.getByName(song.getName())).thenReturn(
                 new ResponseInputStream<>(GetObjectResponse.builder().build(), AbortableInputStream.createEmpty()));
@@ -111,7 +112,7 @@ class ResourceServiceTest {
         InputStreamResource fileData = service.getById(id);
         assertNotNull(fileData);
 
-        verify(resourceRepository, only()).findNameById(id);
+        verify(resourceRepository, only()).findById(id);
         verify(storageRepository, only()).getByName(song.getName());
     }
 
@@ -125,12 +126,12 @@ class ResourceServiceTest {
         when(idParamValidator.validate(any())).thenReturn(Boolean.TRUE);
         long id = 1L;
         String name = "test.mp3";
-        when(resourceRepository.findNameById(id)).thenReturn(Optional.of(name));
+        when(resourceRepository.findById(id)).thenReturn(Optional.of(new Resource.Builder("test/test.mp3", name).build()));
         doNothing().when(storageRepository).deleteByName(any());
         service.deleteByIds(new long[]{1L});
 
         verify(idParamValidator, times(1)).validate(any());
-        verify(resourceRepository, times(1)).findNameById(id);
+        verify(resourceRepository, times(1)).findById(id);
         verify(storageRepository, times(1)).deleteByName(name);
     }
 

@@ -1,16 +1,10 @@
 
 A
 gradle.properties,2/a/2afbb999f001938c88fa43fc2ef52abf0f8213e4
-‹
-[src/main/java/com/epam/training/microservicefoundation/resourceservice/domain/Resource.java,e/d/ed3b5b8b2c184b804603b4d6cdcd96b503908eb1
-<
-build.gradle,f/0/f07866736216be0ee2aba49e392191aeae700a35
 ‘
 asrc/main/java/com/epam/training/microservicefoundation/resourceservice/domain/ResourceRecord.java,a/f/af428710fdbc029962d38f728a1906a1ae9223ac
 œ
 lsrc/main/java/com/epam/training/microservicefoundation/resourceservice/configuration/TopicConfiguration.java,1/8/183e0a6f5007625f700809823e66d61547efef64
-–
-fsrc/main/java/com/epam/training/microservicefoundation/resourceservice/ResourceServiceApplication.java,2/8/28d9419778610f790cbfd8ec5bfba002b5ba11db
 £
 ssrc/main/java/com/epam/training/microservicefoundation/resourceservice/service/implementation/IdParamValidator.java,8/f/8f32db6d38f02eb566dd5303f6e351cf67a2885f
 •
@@ -23,9 +17,5 @@ _src/main/java/com/epam/training/microservicefoundation/resourceservice/domain/R
 {src/test/java/com.epam.training.microservicefoundation/resourceservice/repository/s3storage/CloudStorageRepositoryTest.java,a/9/a96f9d5f3ce62dc3730984d8e01756520c738736
 
 ]src/main/java/com/epam/training/microservicefoundation/resourceservice/service/Convertor.java,2/2/22109ecfa2b799d8b74afd4ffb420a7b1f2ed330
-Œ
-\src/main/java/com/epam/training/microservicefoundation/resourceservice/util/ResourceSQL.java,e/e/ee494be0c27e823096c7b8c70253b69306083bb9
 Ÿ
 osrc/main/java/com/epam/training/microservicefoundation/resourceservice/service/implementation/KafkaManager.java,2/1/21898f52a8d6260032d54433924cd7dfac0541df
-—
-gsrc/test/java/com.epam.training.microservicefoundation/resourceservice/service/ResourceServiceTest.java,c/6/c6c30396fc375ab951964d93260927d8f8f7c8c9

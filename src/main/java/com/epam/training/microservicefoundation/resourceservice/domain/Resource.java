@@ -1,25 +1,46 @@
 package com.epam.training.microservicefoundation.resourceservice.domain;
 
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-
+@Entity
+@EntityListeners(AuditingEntityListener.class)
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"path", "name"}))
 public class Resource implements Serializable {
     public static final long serialVersionUID = 2022_10_06_06_57L;
+    @Id
+    @GeneratedValue(generator = "resource_sequence", strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(name = "resource_sequence", sequenceName = "resource_sequence", allocationSize = 5)
     private final long id;
+    @Column(length = 200, nullable = false)
     private final String path;
+    @Column(length = 100, nullable = false)
     private final String name;
-    private final LocalDateTime createdDate;
-    private final LocalDateTime lastModifiedDate;
+    @Column(nullable = false, updatable = false)
+    @CreatedDate
+    private LocalDateTime createdDate;
+    @LastModifiedDate
+    private LocalDateTime lastModifiedDate;
 
     private Resource(Builder builder) {
         this.id = builder.id;
         this.path = builder.path;
         this.name = builder.name;
-        this.createdDate = builder.createdDate;
-        this.lastModifiedDate = builder.lastModifiedDate;
     }
 
     public Map<String, Object> toMap() {
@@ -28,13 +49,6 @@ public class Resource implements Serializable {
         parameters.put("path", this.path);
         parameters.put("name", this.name);
 
-        if(createdDate != null) {
-            parameters.put("created_date", this.createdDate);
-        }
-        if(lastModifiedDate != null) {
-            parameters.put("last_modified_date", this.lastModifiedDate);
-        }
-
         return parameters;
     }
 
@@ -42,8 +56,6 @@ public class Resource implements Serializable {
         private final String path;
         private final String name;
         private long id;
-        private LocalDateTime createdDate;
-        private LocalDateTime lastModifiedDate;
 
         public Builder(String path, String name) {
             this.path = path;
@@ -53,16 +65,6 @@ public class Resource implements Serializable {
         public Builder id(long id) {
             this.id = id;
 
-            return this;
-        }
-
-        public Builder createdDate(LocalDateTime date) {
-            this.createdDate = date;
-            return this;
-        }
-
-        public Builder lastModifiedDate(LocalDateTime lastModifiedDate) {
-            this.lastModifiedDate = lastModifiedDate;
             return this;
         }
 

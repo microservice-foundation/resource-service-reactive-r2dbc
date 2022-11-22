@@ -60,7 +60,6 @@ public class ResourceServiceImpl implements ResourceService {
 
         String path = storageRepository.upload(file);
         Resource resource = new Resource.Builder(path, file.getOriginalFilename())
-                .createdDate(LocalDateTime.now())
                 .build();
 
         ResourceRecord resourceRecord = mapper.mapToRecord(resourceRepository.save(resource));
@@ -71,10 +70,9 @@ public class ResourceServiceImpl implements ResourceService {
     @Override
     public InputStreamResource getById(long id) {
         log.info("Getting file by id '{}'", id);
-        String name = resourceRepository.findNameById(id)
+        return resourceRepository.findById(id)
+                .map(resource -> new InputStreamResource(storageRepository.getByName(resource.getName())))
                 .orElseThrow(() -> new ResourceNotFoundException(String.format("Resource not found with id '%d'", id)));
-
-        return new InputStreamResource(storageRepository.getByName(name));
     }
 
     @Transactional
@@ -86,10 +84,9 @@ public class ResourceServiceImpl implements ResourceService {
             log.error("Id param size '{}' should be less than 200 \nreason:", ids.length, ex);
             throw ex;
         }
-
-        Arrays.stream(ids)
-                .mapToObj(resourceRepository::findNameById)
-                .filter(Optional::isPresent).map(Optional::get)
+        Arrays.stream(ids).mapToObj(resourceRepository::findById)
+                .filter(Optional::isPresent)
+                .map(resource -> resource.get().getName())
                 .forEach(storageRepository::deleteByName);
 
         Arrays.stream(ids).forEach(resourceRepository::deleteById);
