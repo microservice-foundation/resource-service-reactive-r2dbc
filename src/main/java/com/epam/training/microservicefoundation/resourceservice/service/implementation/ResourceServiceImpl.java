@@ -62,7 +62,7 @@ public class ResourceServiceImpl implements ResourceService {
         Resource resource = new Resource.Builder(path, file.getOriginalFilename())
                 .build();
 
-        ResourceRecord resourceRecord = mapper.mapToRecord(resourceRepository.save(resource));
+        ResourceRecord resourceRecord = mapper.mapToRecord(resourceRepository.persist(resource));
         kafkaManager.publishCallback(resourceRecord);
         return resourceRecord;
     }

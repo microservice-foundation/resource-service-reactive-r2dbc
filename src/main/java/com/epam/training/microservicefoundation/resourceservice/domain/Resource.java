@@ -26,17 +26,18 @@ public class Resource implements Serializable {
     @Id
     @GeneratedValue(generator = "resource_sequence", strategy = GenerationType.SEQUENCE)
     @SequenceGenerator(name = "resource_sequence", sequenceName = "resource_sequence", allocationSize = 5)
-    private final long id;
+    private long id;
     @Column(length = 200, nullable = false)
-    private final String path;
+    private String path;
     @Column(length = 100, nullable = false)
-    private final String name;
+    private String name;
     @Column(nullable = false, updatable = false)
     @CreatedDate
     private LocalDateTime createdDate;
     @LastModifiedDate
     private LocalDateTime lastModifiedDate;
 
+    protected Resource() {}
     private Resource(Builder builder) {
         this.id = builder.id;
         this.path = builder.path;
