@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Arrays;
-import java.util.function.Predicate;
 
 @Component
 public class MultipartFileValidator implements Validator<MultipartFile> {

@@ -5,76 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f51d7fbf-9ae1-496f-8aaa-2068c2edd23e" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/aws.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/checkstyle-idea.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/2/a/2afbb999f001938c88fa43fc2ef52abf0f8213e4" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/index.pb" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gradle.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gradlew" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gradlew.bat" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/settings.gradle" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/epam/training/microservicefoundation/resourceservice/ResourceServiceApplication.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/epam/training/microservicefoundation/resourceservice/api/ResourceController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/epam/training/microservicefoundation/resourceservice/api/ResourceExceptionHandler.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/epam/training/microservicefoundation/resourceservice/configuration/AwsS3Configuration.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/epam/training/microservicefoundation/resourceservice/configuration/KafkaConfiguration.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/epam/training/microservicefoundation/resourceservice/configuration/TopicConfiguration.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/epam/training/microservicefoundation/resourceservice/domain/APIError.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/epam/training/microservicefoundation/resourceservice/domain/Mapper.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/epam/training/microservicefoundation/resourceservice/domain/Resource.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/epam/training/microservicefoundation/resourceservice/domain/ResourceMapper.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/epam/training/microservicefoundation/resourceservice/domain/ResourceNotFoundException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/epam/training/microservicefoundation/resourceservice/domain/ResourceRecord.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/epam/training/microservicefoundation/resourceservice/domain/ResourceType.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/epam/training/microservicefoundation/resourceservice/domain/SongResourceRowMapper.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/epam/training/microservicefoundation/resourceservice/repository/CloudStorageRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/epam/training/microservicefoundation/resourceservice/repository/JdbcRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/epam/training/microservicefoundation/resourceservice/repository/ResourceRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/epam/training/microservicefoundation/resourceservice/service/Convertor.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/epam/training/microservicefoundation/resourceservice/service/ResourceService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/epam/training/microservicefoundation/resourceservice/service/Validator.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/epam/training/microservicefoundation/resourceservice/service/implementation/CsvFileConvertor.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/epam/training/microservicefoundation/resourceservice/service/implementation/IdParamValidator.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/epam/training/microservicefoundation/resourceservice/service/implementation/KafkaManager.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/epam/training/microservicefoundation/resourceservice/service/implementation/MultipartFileValidator.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/epam/training/microservicefoundation/resourceservice/service/implementation/ResourceServiceImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/epam/training/microservicefoundation/resourceservice/util/ResourceSQL.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/logback.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/resource-query.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/sql/create-schema.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/sql/data.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/sql/drop-schema.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/com.epam.training.microservicefoundation/resourceservice/ResourceServiceApplicationTests.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/com.epam.training.microservicefoundation/resourceservice/api/ResourceControllerTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/com.epam.training.microservicefoundation/resourceservice/configuration/AwsS3Configuration.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/com.epam.training.microservicefoundation/resourceservice/repository/TestStorageContext.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/com.epam.training.microservicefoundation/resourceservice/repository/resourcedatabase/PostgresExtension.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/com.epam.training.microservicefoundation/resourceservice/repository/resourcedatabase/ResourceRepositoryTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/com.epam.training.microservicefoundation/resourceservice/repository/s3storage/CloudStorageExtension.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/com.epam.training.microservicefoundation/resourceservice/repository/s3storage/CloudStorageRepositoryTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/com.epam.training.microservicefoundation/resourceservice/service/ResourceServiceTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/com.epam.training.microservicefoundation/resourceservice/service/convertor/CsvFileConvertorTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/com.epam.training.microservicefoundation/resourceservice/service/kafka/KafkaExtension.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/com.epam.training.microservicefoundation/resourceservice/service/kafka/KafkaManagerTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/com.epam.training.microservicefoundation/resourceservice/service/validator/IdParamValidatorTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/com.epam.training.microservicefoundation/resourceservice/service/validator/MultipartFileValidatorTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/resources/application.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/resources/files/ids.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/resources/files/invalid_ids.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/resources/files/mpthreetest.mp3" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/resources/files/mpthreetest2.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -203,13 +134,12 @@
       <DebugAllEnabled>false</DebugAllEnabled>
       <method v="2" />
     </configuration>
-    <configuration default="true" type="Remote">
-      <option name="USE_SOCKET_TRANSPORT" value="true" />
-      <option name="SERVER_MODE" value="false" />
-      <option name="SHMEM_ADDRESS" value="javadebug" />
-      <option name="HOST" value="localhost" />
-      <option name="PORT" value="5005" />
-      <option name="AUTO_RESTART" value="false" />
+    <configuration default="true" type="aws.lambda" factoryName="Remote">
+      <option name="credentialProviderId" />
+      <option name="regionId" />
+      <option name="functionName" />
+      <option name="input" />
+      <option name="inputIsFile" value="false" />
       <method v="2" />
     </configuration>
     <recent_temporary>

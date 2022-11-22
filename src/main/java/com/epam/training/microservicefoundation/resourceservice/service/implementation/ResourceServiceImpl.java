@@ -1,12 +1,11 @@
 package com.epam.training.microservicefoundation.resourceservice.service.implementation;
 
-import com.epam.training.microservicefoundation.resourceservice.domain.ResourceMapper;
+import com.epam.training.microservicefoundation.resourceservice.domain.Mapper;
+import com.epam.training.microservicefoundation.resourceservice.domain.Resource;
 import com.epam.training.microservicefoundation.resourceservice.domain.ResourceNotFoundException;
 import com.epam.training.microservicefoundation.resourceservice.domain.ResourceRecord;
-import com.epam.training.microservicefoundation.resourceservice.domain.Resource;
 import com.epam.training.microservicefoundation.resourceservice.repository.CloudStorageRepository;
 import com.epam.training.microservicefoundation.resourceservice.repository.ResourceRepository;
-import com.epam.training.microservicefoundation.resourceservice.service.Convertor;
 import com.epam.training.microservicefoundation.resourceservice.service.ResourceService;
 import com.epam.training.microservicefoundation.resourceservice.service.Validator;
 import org.slf4j.Logger;
@@ -17,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -31,19 +29,19 @@ public class ResourceServiceImpl implements ResourceService {
     private static final Logger log = LoggerFactory.getLogger(ResourceServiceImpl.class);
     private final ResourceRepository resourceRepository;
     private final CloudStorageRepository storageRepository;
-    private final ResourceMapper mapper;
-    private final Validator<MultipartFile> songFileValidator;
+    private final Mapper<Resource, ResourceRecord> mapper;
+    private final Validator<MultipartFile> multipartFileValidator;
     private final Validator<long[]> idParamValidator;
     private final KafkaManager kafkaManager;
     @Autowired
     public ResourceServiceImpl(ResourceRepository resourceRepository, CloudStorageRepository storageRepository,
-                               ResourceMapper mapper, MultipartFileValidator songFileValidator,
-                               IdParamValidator idParamValidator, KafkaManager kafkaManager) {
+                               Mapper<Resource, ResourceRecord> mapper, Validator<MultipartFile> multipartFileValidator,
+                               Validator<long[]> idParamValidator, KafkaManager kafkaManager) {
 
         this.resourceRepository = resourceRepository;
         this.storageRepository = storageRepository;
         this.mapper = mapper;
-        this.songFileValidator = songFileValidator;
+        this.multipartFileValidator = multipartFileValidator;
         this.idParamValidator = idParamValidator;
         this.kafkaManager = kafkaManager;
     }
@@ -52,7 +50,7 @@ public class ResourceServiceImpl implements ResourceService {
     @Override
     public ResourceRecord save(MultipartFile file) {
         log.info("Saving file '{}'", file.getOriginalFilename());
-        if(!songFileValidator.validate(file)) {
+        if(!multipartFileValidator.validate(file)) {
             IllegalArgumentException ex = new IllegalArgumentException(String.format("File with name '%s' was not " +
                     "validated, check your file", file.getOriginalFilename()));
 
