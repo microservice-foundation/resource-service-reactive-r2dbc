@@ -24,3 +24,5 @@ eureka:
     hostname: ${spring.application.name}
     instance-id: ${spring.application.name}:${random.int}
     lease-renewal-interval-in-seconds: 10
+    preferIpAddress: true
+management.endpoints.web.exposure.include: health, info
