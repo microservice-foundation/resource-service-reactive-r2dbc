@@ -23,7 +23,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/resources")
 public class ResourceController {
-    //TODO: use swagger
     private static final Logger log = LoggerFactory.getLogger(ResourceController.class);
     @Autowired
     private ResourceService service;
@@ -45,6 +44,7 @@ public class ResourceController {
     @GetMapping(value = "/{id}", produces = "audio/mpeg")
     @ResponseStatus(value = HttpStatus.OK)
     public InputStreamResource get(@PathVariable long id) {
+        log.info("Getting resource by id '{}'", id);
         return service.getById(id);
     }
 }
