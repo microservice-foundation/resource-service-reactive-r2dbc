@@ -26,14 +26,14 @@
         </encoder>
 
         <!-- Setting up a rolling policy with rolling done
-            daily and when file size is 10MB-->
+            daily and when file size is 50MB-->
         <rollingPolicy
                 class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${LOG_PATH}/archived/${LOG_FILE_NAME}-%d{yyyy-MM-dd}.%i.log
+            <fileNamePattern>${LOG_PATH}/archived/${LOG_FILE_NAME}-%d{yyyy-MM-dd HH:mm}.%i.log
             </fileNamePattern>
             <timeBasedFileNamingAndTriggeringPolicy
                     class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                <maxFileSize>10MB</maxFileSize>
+                <maxFileSize>50MB</maxFileSize>
             </timeBasedFileNamingAndTriggeringPolicy>
         </rollingPolicy>
     </appender>
@@ -46,7 +46,7 @@
     <!-- Logging at TRACE level -->
     <logger name="com.log" level="trace" additivity="false">
         <appender-ref ref="LogFile" />
-        <!-- <appender-ref ref="ConsoleOutput" /> -->
+         <appender-ref ref="ConsoleOutput" />
     </logger>
     <!-- Logging at INFO level -->
     <root level="info">
