@@ -3,9 +3,7 @@ package com.epam.training.microservicefoundation.resourceservice.configuration;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
-import software.amazon.awssdk.auth.credentials.ProfileCredentialsProvider;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
@@ -21,8 +19,6 @@ public class AwsS3Configuration {
     private String amazonS3AccessKey;
     @Value("${aws.s3.credentials.secret-key}")
     private String amazonS3SecretKey;
-    @Value("${aws.s3.region}")
-    private String amazonS3Region;
     @Value("${aws.s3.bucket-name}")
     private String amazonS3BucketName;
 
@@ -31,7 +27,7 @@ public class AwsS3Configuration {
         return S3Client.builder()
                 .credentialsProvider(getStaticCredentialsProvider())
                 .endpointOverride(URI.create(amazonS3Endpoint))
-                .region(Region.of(amazonS3Region))
+                .region(Region.US_EAST_1)
                 .build();
     }
 

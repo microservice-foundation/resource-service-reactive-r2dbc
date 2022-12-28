@@ -10,6 +10,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -30,8 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @ExtendWith(value = {PostgresExtension.class, CloudStorageExtension.class})
-@Sql(value = {"/sql/drop-schema.sql", "/sql/create-schema.sql"})
-@Sql(value = "/sql/data.sql")
+@TestPropertySource(locations = "classpath:application.yaml")
 class ResourceControllerTest {
     private MockMvc mockMvc;
 
@@ -52,7 +52,6 @@ class ResourceControllerTest {
 
         result.andExpect(status().isCreated());
         result.andExpect(content().contentType(MediaType.APPLICATION_JSON));
-        result.andExpect(jsonPath("$.id", is(6)));
     }
 
     @Test
@@ -88,13 +87,32 @@ class ResourceControllerTest {
 
     @Test
     void shouldDeleteResourceByIds() throws Exception {
-        String[] ids = {"1", "2"};
+        final File songFile = ResourceUtils.getFile("classpath:files/mpthreetest.mp3");
+
+        // save file 1
+        String multipartFile1Name = "multipartFile1";
+        MockMultipartFile multipartFile1 = new MockMultipartFile("multipartFile", multipartFile1Name,
+                "audio/mpeg", Files.readAllBytes(songFile.toPath()));
+        MvcResult mvcResult1 = mockMvc.perform(MockMvcRequestBuilders.multipart("/api/v1/resources/")
+                .file(multipartFile1)).andReturn();
+
+        // save file 1
+        String multipartFile2Name = "multipartFile2";
+        MockMultipartFile multipartFile2 = new MockMultipartFile("multipartFile", multipartFile2Name,
+                "audio/mpeg", Files.readAllBytes(songFile.toPath()));
+        MvcResult mvcResult2 = mockMvc.perform(MockMvcRequestBuilders.multipart("/api/v1/resources/")
+                .file(multipartFile2)).andReturn();
+
+        String multipartFile1Id = getValueOf("Id", mvcResult1.getResponse().getContentAsString());
+        String multipartFile2Id = getValueOf("Id", mvcResult2.getResponse().getContentAsString());
+        String[] ids = {multipartFile1Id, multipartFile2Id};
         ResultActions result = mockMvc
                         .perform(MockMvcRequestBuilders.delete("/api/v1/resources").param("id", ids));
 
         result.andExpect(status().isOk());
-        result.andExpect(jsonPath("$[*].id", contains(Integer.valueOf(ids[0]), Integer.valueOf(ids[1]))));
+        result.andExpect(jsonPath("$[*].Id", contains(Integer.valueOf(ids[0]), Integer.valueOf(ids[1]))));
     }
+
 
     @Test
     void shouldThrowValidationExceptionWhenDeleteResourceByIds() throws Exception {
@@ -117,7 +135,7 @@ class ResourceControllerTest {
         ResultActions result = mockMvc
                 .perform(MockMvcRequestBuilders.delete("/api/v1/resources").param("id", "10", "1245"));
 
-        result.andExpect(status().isBadRequest());
+        result.andExpect(status().isNotFound());
     }
 
     @Test
@@ -130,11 +148,10 @@ class ResourceControllerTest {
 
 
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.multipart("/api/v1/resources/")
-                        .file(multipartFile))
-                .andReturn();
+                        .file(multipartFile)).andReturn();
         // get the file
         ResultActions result = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/resources/{id}",
-                getValueOf("id", mvcResult.getResponse().getContentAsString())));
+                getValueOf("Id", mvcResult.getResponse().getContentAsString())));
 
         result.andExpect(status().isOk());
         result.andExpect(content().contentType(multipartFile.getContentType()));

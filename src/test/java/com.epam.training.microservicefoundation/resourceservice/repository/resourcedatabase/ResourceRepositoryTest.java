@@ -10,6 +10,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.time.LocalDateTime;
@@ -25,6 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @ExtendWith(PostgresExtension.class)
 @DirtiesContext
 @Sql(value = "/sql/data.sql")
+@TestPropertySource(locations = "classpath:application.yaml")
 class ResourceRepositoryTest {
     @Autowired
     ResourceRepository resourceRepository;

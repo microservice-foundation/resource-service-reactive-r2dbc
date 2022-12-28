@@ -16,9 +16,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -83,15 +83,17 @@ public class ResourceServiceImpl implements ResourceService {
             log.error("Id param size '{}' should be less than 200 \nreason:", ids.length, ex);
             throw ex;
         }
-        Arrays.stream(ids).mapToObj(resourceRepository::findById)
-                .filter(Optional::isPresent)
-                .map(resource -> resource.get().getName())
-                .forEach(storageRepository::deleteByName);
+        List<Resource> resources = new ArrayList<>();
+        for(long id: ids) {
+            Resource resource = resourceRepository.findById(id).orElseThrow(() ->
+                    new ResourceNotFoundException(String.format("Resource not found with id '%d'", id)));
+            resources.add(resource);
+        }
 
+        resources.stream().map(Resource::getName).forEach(storageRepository::deleteByName);
         Arrays.stream(ids).forEach(resourceRepository::deleteById);
 
         log.debug("Resources with id(s) '{}' were deleted", ids);
         return Arrays.stream(ids).mapToObj(ResourceRecord::new).collect(Collectors.toList());
     }
-
 }

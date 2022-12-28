@@ -17,7 +17,6 @@ import software.amazon.awssdk.services.s3.model.NoSuchKeyException;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectResponse;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Objects;
