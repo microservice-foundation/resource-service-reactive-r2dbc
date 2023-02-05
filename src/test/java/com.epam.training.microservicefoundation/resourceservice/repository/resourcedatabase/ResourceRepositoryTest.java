@@ -1,6 +1,6 @@
 package com.epam.training.microservicefoundation.resourceservice.repository.resourcedatabase;
 
-import com.epam.training.microservicefoundation.resourceservice.domain.Resource;
+import com.epam.training.microservicefoundation.resourceservice.model.Resource;
 import com.epam.training.microservicefoundation.resourceservice.repository.ResourceRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @ExtendWith(PostgresExtension.class)
 @DirtiesContext
 @Sql(value = "/sql/data.sql")
-@TestPropertySource(locations = "classpath:application.yaml")
+@TestPropertySource(locations = "classpath:application.properties")
 class ResourceRepositoryTest {
     @Autowired
     ResourceRepository resourceRepository;

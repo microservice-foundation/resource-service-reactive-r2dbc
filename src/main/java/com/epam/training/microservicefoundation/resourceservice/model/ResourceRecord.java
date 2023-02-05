@@ -1,13 +1,10 @@
-package com.epam.training.microservicefoundation.resourceservice.domain;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
+package com.epam.training.microservicefoundation.resourceservice.model;
 
 import java.io.Serializable;
 
 public class ResourceRecord implements Serializable {
     private static final long serialVersionUID = 10_11_2022_11_13L;
 
-    @JsonProperty("Id")
     private long id;
 
     public ResourceRecord() {}

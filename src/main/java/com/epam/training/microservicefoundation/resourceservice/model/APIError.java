@@ -1,19 +1,15 @@
-package com.epam.training.microservicefoundation.resourceservice.domain;
+package com.epam.training.microservicefoundation.resourceservice.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.http.HttpStatus;
-
-import java.time.LocalDateTime;
 
 public class APIError {
     private HttpStatus status;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
-    private LocalDateTime timestamp;
+    private final long timestamp;
     private String message;
     private String debugMessage;
 
     private APIError() {
-        timestamp = LocalDateTime.now();
+        timestamp = System.currentTimeMillis();
     }
 
     public APIError(HttpStatus status, Throwable ex) {
@@ -34,7 +30,7 @@ public class APIError {
         return status;
     }
 
-    public LocalDateTime getTimestamp() {
+    public long getTimestamp() {
         return timestamp;
     }
 

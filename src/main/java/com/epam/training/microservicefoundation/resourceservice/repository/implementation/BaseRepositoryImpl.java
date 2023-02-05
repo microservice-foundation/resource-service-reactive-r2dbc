@@ -1,12 +1,12 @@
 package com.epam.training.microservicefoundation.resourceservice.repository.implementation;
 
 import com.epam.training.microservicefoundation.resourceservice.repository.BaseRepository;
+import javax.persistence.EntityManager;
 import org.hibernate.Session;
 import org.hibernate.engine.jdbc.spi.JdbcServices;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
 import org.hibernate.internal.AbstractSharedSessionContract;
 
-import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
 import java.util.List;

@@ -1,9 +1,9 @@
 package com.epam.training.microservicefoundation.resourceservice.service.implementation;
 
-import com.epam.training.microservicefoundation.resourceservice.domain.Mapper;
-import com.epam.training.microservicefoundation.resourceservice.domain.Resource;
-import com.epam.training.microservicefoundation.resourceservice.domain.ResourceNotFoundException;
-import com.epam.training.microservicefoundation.resourceservice.domain.ResourceRecord;
+import com.epam.training.microservicefoundation.resourceservice.model.Mapper;
+import com.epam.training.microservicefoundation.resourceservice.model.Resource;
+import com.epam.training.microservicefoundation.resourceservice.model.ResourceNotFoundException;
+import com.epam.training.microservicefoundation.resourceservice.model.ResourceRecord;
 import com.epam.training.microservicefoundation.resourceservice.repository.CloudStorageRepository;
 import com.epam.training.microservicefoundation.resourceservice.repository.ResourceRepository;
 import com.epam.training.microservicefoundation.resourceservice.service.ResourceService;
@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -83,16 +84,13 @@ public class ResourceServiceImpl implements ResourceService {
             log.error("Id param size '{}' should be less than 200 \nreason:", ids.length, ex);
             throw ex;
         }
-        List<Resource> resources = new ArrayList<>();
-        for(long id: ids) {
-            Resource resource = resourceRepository.findById(id).orElseThrow(() ->
-                    new ResourceNotFoundException(String.format("Resource not found with id '%d'", id)));
-            resources.add(resource);
-        }
 
-        resources.stream().map(Resource::getName).forEach(storageRepository::deleteByName);
-        Arrays.stream(ids).forEach(resourceRepository::deleteById);
-
+        Arrays.stream(ids).mapToObj(resourceRepository::findById).forEach(resourceOptional ->
+                resourceOptional.ifPresent(resource -> {
+                    storageRepository.deleteByName(resource.getName());
+                    resourceRepository.deleteById(resource.getId());
+                })
+        );
         log.debug("Resources with id(s) '{}' were deleted", ids);
         return Arrays.stream(ids).mapToObj(ResourceRecord::new).collect(Collectors.toList());
     }

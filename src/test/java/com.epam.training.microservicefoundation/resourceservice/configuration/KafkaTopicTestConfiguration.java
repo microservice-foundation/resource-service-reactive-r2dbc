@@ -4,9 +4,8 @@ import com.epam.training.microservicefoundation.resourceservice.model.ResourceRe
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cloud.context.config.annotation.RefreshScope;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.config.TopicBuilder;
 import software.amazon.awssdk.utils.Pair;
 
@@ -14,9 +13,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-@Configuration
-@RefreshScope
-public class TopicConfiguration {
+@TestConfiguration
+public class KafkaTopicTestConfiguration {
 
     @Value("${kafka.topic.resources}")
     private String topicName;
@@ -36,10 +34,10 @@ public class TopicConfiguration {
 
     @Bean
     Map<Class<?>, Pair<String, Function<Object, ProducerRecord<String, Object>>>> publicationTopics() {
-       Map<Class<?>, Pair<String, Function<Object, ProducerRecord<String, Object>>>> map = new HashMap<>();
-       map.put(ResourceRecord.class, Pair.of(topicName, message -> new ProducerRecord<>(topicName,
-               String.valueOf(((ResourceRecord) message).getId()), message)));
+        Map<Class<?>, Pair<String, Function<Object, ProducerRecord<String, Object>>>> map = new HashMap<>();
+        map.put(ResourceRecord.class, Pair.of(topicName, message -> new ProducerRecord<>(topicName,
+                String.valueOf(((ResourceRecord) message).getId()), message)));
 
-       return map;
+        return map;
     }
 }

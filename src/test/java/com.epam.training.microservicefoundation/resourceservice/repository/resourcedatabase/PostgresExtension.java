@@ -11,11 +11,11 @@ public final class PostgresExtension implements BeforeAllCallback, AfterAllCallb
     private PostgreSQLContainer<?> database;
 
     @Override
-    public void afterAll(ExtensionContext context) throws Exception {
+    public void afterAll(ExtensionContext context) {
     }
 
     @Override
-    public void beforeAll(ExtensionContext context) throws Exception {
+    public void beforeAll(ExtensionContext context) {
         database = new PostgreSQLContainer<>("postgres:12.9-alpine");
         database.start();
 

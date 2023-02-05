@@ -1,11 +1,9 @@
 package com.epam.training.microservicefoundation.resourceservice.repository;
 
-import com.epam.training.microservicefoundation.resourceservice.configuration.AwsS3Configuration;
-import com.epam.training.microservicefoundation.resourceservice.domain.ResourceNotFoundException;
+import com.epam.training.microservicefoundation.resourceservice.model.ResourceNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.ResponseInputStream;
 import software.amazon.awssdk.core.sync.RequestBody;
@@ -21,24 +19,27 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Objects;
 
-@Repository
+
 public class CloudStorageRepository {
 
     private static final Logger log = LoggerFactory.getLogger(CloudStorageRepository.class);
-    private final AwsS3Configuration configuration;
+    private final String bucketName;
+    private final String s3Endpoint;
     private final S3Client s3Client;
 
     @Autowired
-    public CloudStorageRepository(AwsS3Configuration configuration, S3Client s3Client) {
-        this.configuration = configuration;
+    public CloudStorageRepository(String bucketName, String s3Endpoint, S3Client s3Client) {
+        this.bucketName = bucketName;
+        this.s3Endpoint = s3Endpoint;
         this.s3Client = s3Client;
+
     }
 
     public String upload(MultipartFile file) {
-        log.info("Uploading file '{}' to bucket '{}'", file.getName(), configuration);
+        log.info("Uploading file '{}' to bucket '{}'", file.getName(), bucketName);
 
         PutObjectRequest objectRequest = PutObjectRequest.builder()
-                .bucket(configuration.getAmazonS3BucketName())
+                .bucket(bucketName)
                 .key(file.getOriginalFilename())
                 .build();
 
@@ -55,22 +56,22 @@ public class CloudStorageRepository {
 
         if(Objects.nonNull(putObjectResponse)) {
             log.debug("File '{}' uploaded successfully to bucket '{}': response: {}", file.getOriginalFilename(),
-                    configuration.getAmazonS3BucketName(), putObjectResponse);
+                    bucketName, putObjectResponse);
 
-            return configuration.getAmazonS3Endpoint() + "/" + configuration.getAmazonS3BucketName() + "/" + file.getOriginalFilename();
+            return s3Endpoint + "/" + bucketName + "/" + file.getOriginalFilename();
         }
 
         IllegalStateException ex = new IllegalStateException(String.format("File '%1s' upload failed to bucket '%2s'",
-                file.getOriginalFilename(), configuration.getAmazonS3BucketName()));
+                file.getOriginalFilename(), bucketName));
 
         log.error("Uploading file failed:", ex);
         throw ex;
     }
 
     public ResponseInputStream<GetObjectResponse> getByName(String name) {
-        log.info("Getting song by name '{}' from bucket '{}'", name, configuration.getAmazonS3BucketName());
+        log.info("Getting song by name '{}' from bucket '{}'", name, bucketName);
         GetObjectRequest request = GetObjectRequest.builder()
-                .bucket(configuration.getAmazonS3BucketName())
+                .bucket(bucketName)
                 .key(name)
                 .build();
         try {
@@ -85,10 +86,10 @@ public class CloudStorageRepository {
     }
 
     public void deleteByName(String name) {
-        log.info("Deleting a song '{}' from bucket '{}'", name, configuration.getAmazonS3BucketName());
+        log.info("Deleting a song '{}' from bucket '{}'", name, bucketName);
 
         DeleteObjectRequest request = DeleteObjectRequest.builder()
-                .bucket(configuration.getAmazonS3BucketName())
+                .bucket(bucketName)
                 .key(name)
                 .build();
 

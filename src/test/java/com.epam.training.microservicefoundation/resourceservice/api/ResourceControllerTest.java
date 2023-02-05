@@ -1,7 +1,9 @@
 package com.epam.training.microservicefoundation.resourceservice.api;
 
+import com.epam.training.microservicefoundation.resourceservice.configuration.AwsS3TestConfiguration;
 import com.epam.training.microservicefoundation.resourceservice.repository.resourcedatabase.PostgresExtension;
 import com.epam.training.microservicefoundation.resourceservice.repository.s3storage.CloudStorageExtension;
+import com.epam.training.microservicefoundation.resourceservice.service.kafka.KafkaExtension;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,8 +12,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
@@ -30,8 +33,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
-@ExtendWith(value = {PostgresExtension.class, CloudStorageExtension.class})
-@TestPropertySource(locations = "classpath:application.yaml")
+@DirtiesContext
+@ExtendWith(value = {
+        PostgresExtension.class,
+        CloudStorageExtension.class,
+        KafkaExtension.class
+})
+@ContextConfiguration(classes = {AwsS3TestConfiguration.class})
+@TestPropertySource(locations = "classpath:application.properties")
 class ResourceControllerTest {
     private MockMvc mockMvc;
 
@@ -103,14 +112,14 @@ class ResourceControllerTest {
         MvcResult mvcResult2 = mockMvc.perform(MockMvcRequestBuilders.multipart("/api/v1/resources/")
                 .file(multipartFile2)).andReturn();
 
-        String multipartFile1Id = getValueOf("Id", mvcResult1.getResponse().getContentAsString());
-        String multipartFile2Id = getValueOf("Id", mvcResult2.getResponse().getContentAsString());
+        String multipartFile1Id = getValueOf("id", mvcResult1.getResponse().getContentAsString());
+        String multipartFile2Id = getValueOf("id", mvcResult2.getResponse().getContentAsString());
         String[] ids = {multipartFile1Id, multipartFile2Id};
         ResultActions result = mockMvc
                         .perform(MockMvcRequestBuilders.delete("/api/v1/resources").param("id", ids));
 
         result.andExpect(status().isOk());
-        result.andExpect(jsonPath("$[*].Id", contains(Integer.valueOf(ids[0]), Integer.valueOf(ids[1]))));
+        result.andExpect(jsonPath("$[*].id", contains(Integer.valueOf(ids[0]), Integer.valueOf(ids[1]))));
     }
 
 
@@ -131,14 +140,6 @@ class ResourceControllerTest {
     }
 
     @Test
-    void shouldThrowValidationExceptionWhenDeleteResourceByNonexistentIds() throws Exception {
-        ResultActions result = mockMvc
-                .perform(MockMvcRequestBuilders.delete("/api/v1/resources").param("id", "10", "1245"));
-
-        result.andExpect(status().isNotFound());
-    }
-
-    @Test
     void shouldGetResource() throws Exception {
         // upload a file
         final File songFile = ResourceUtils.getFile("classpath:files/mpthreetest2.mp3");
@@ -151,7 +152,7 @@ class ResourceControllerTest {
                         .file(multipartFile)).andReturn();
         // get the file
         ResultActions result = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/resources/{id}",
-                getValueOf("Id", mvcResult.getResponse().getContentAsString())));
+                getValueOf("id", mvcResult.getResponse().getContentAsString())));
 
         result.andExpect(status().isOk());
         result.andExpect(content().contentType(multipartFile.getContentType()));

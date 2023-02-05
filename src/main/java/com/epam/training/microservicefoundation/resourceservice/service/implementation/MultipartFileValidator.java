@@ -1,6 +1,6 @@
 package com.epam.training.microservicefoundation.resourceservice.service.implementation;
 
-import com.epam.training.microservicefoundation.resourceservice.domain.ResourceType;
+import com.epam.training.microservicefoundation.resourceservice.model.ResourceType;
 import com.epam.training.microservicefoundation.resourceservice.service.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

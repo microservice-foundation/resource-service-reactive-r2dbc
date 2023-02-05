@@ -1,7 +1,7 @@
 package com.epam.training.microservicefoundation.resourceservice.repository.s3storage;
 
-import com.epam.training.microservicefoundation.resourceservice.configuration.AwsS3Configuration;
-import com.epam.training.microservicefoundation.resourceservice.domain.ResourceNotFoundException;
+import com.epam.training.microservicefoundation.resourceservice.configuration.AwsS3TestConfiguration;
+import com.epam.training.microservicefoundation.resourceservice.model.ResourceNotFoundException;
 import com.epam.training.microservicefoundation.resourceservice.repository.CloudStorageRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,8 +24,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(value = {SpringExtension.class, CloudStorageExtension.class})
-@ContextConfiguration(classes = {AwsS3Configuration.class, TestStorageContext.class})
-@TestPropertySource(locations = "classpath:application.yaml")
+@ContextConfiguration(classes = {AwsS3TestConfiguration.class})
+@TestPropertySource(locations = "classpath:application.properties")
 class CloudStorageRepositoryTest {
 
     @Autowired

@@ -10,6 +10,9 @@ import org.springframework.util.concurrent.ListenableFutureCallback;
 import software.amazon.awssdk.utils.Pair;
 
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.BiFunction;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 
@@ -35,10 +38,16 @@ public class KafkaManager {
     public void publishCallback(Object message) {
         if(publicationTopics.containsKey(message.getClass())) {
             log.info("publishing {} message to kafka: {}", message.getClass().getName(), message);
-            ListenableFuture<SendResult<String, Object>> future =
+
+            ListenableFuture<SendResult<String, Object>> send =
                     kafkaTemplate.send(publicationTopics.get(message.getClass()).right().apply(message));
 
-            future.addCallback(new ListenableFutureCallback<>() {
+//            send.exceptionally(throwable -> {
+//                log.warn("Publishing failed: {} unable to be delivered, {}", message, throwable.getMessage());
+//                return null;
+//            }).thenAccept(result -> log.info("Successfully published: {} message delivered with offset -{}", result,
+//                    result.getRecordMetadata().offset()));
+            send.addCallback(new ListenableFutureCallback<SendResult<String, Object>>() {
                 @Override
                 public void onFailure(Throwable ex) {
                     log.warn("Publishing failed: {} unable to be delivered, {}", message, ex.getMessage());
@@ -47,7 +56,7 @@ public class KafkaManager {
                 @Override
                 public void onSuccess(SendResult<String, Object> result) {
                     log.info("Successfully published: {} message delivered with offset -{}", result,
-                            result.getRecordMetadata().offset());
+                    result.getRecordMetadata().offset());
                 }
             });
         }

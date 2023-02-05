@@ -1,10 +1,10 @@
 package com.epam.training.microservicefoundation.resourceservice.service;
 
 
-import com.epam.training.microservicefoundation.resourceservice.domain.Resource;
-import com.epam.training.microservicefoundation.resourceservice.domain.ResourceMapper;
-import com.epam.training.microservicefoundation.resourceservice.domain.ResourceNotFoundException;
-import com.epam.training.microservicefoundation.resourceservice.domain.ResourceRecord;
+import com.epam.training.microservicefoundation.resourceservice.model.Resource;
+import com.epam.training.microservicefoundation.resourceservice.model.ResourceMapper;
+import com.epam.training.microservicefoundation.resourceservice.model.ResourceNotFoundException;
+import com.epam.training.microservicefoundation.resourceservice.model.ResourceRecord;
 import com.epam.training.microservicefoundation.resourceservice.repository.CloudStorageRepository;
 import com.epam.training.microservicefoundation.resourceservice.repository.ResourceRepository;
 import com.epam.training.microservicefoundation.resourceservice.service.implementation.IdParamValidator;
@@ -69,8 +69,6 @@ class ResourceServiceTest {
 
         long id = 1L;
         when(storageRepository.upload(any())).thenReturn(path);
-        when(resourceRepository.save(any())).thenReturn(
-                new Resource.Builder(path, song.getName()).id(id).build());
 
         when(validator.validate(any())).thenReturn(Boolean.TRUE);
         when(mapper.mapToRecord(any())).thenReturn(new ResourceRecord(id));
@@ -82,7 +80,6 @@ class ResourceServiceTest {
         Assertions.assertEquals(id, record.getId());
 
         verify(storageRepository, only()).upload(any());
-        verify(resourceRepository, only()).save(any());
         verify(validator, only()).validate(any());
         verify(mapper, only()).mapToRecord(any());
     }

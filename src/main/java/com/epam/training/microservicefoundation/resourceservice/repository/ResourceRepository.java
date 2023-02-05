@@ -1,6 +1,6 @@
 package com.epam.training.microservicefoundation.resourceservice.repository;
 
-import com.epam.training.microservicefoundation.resourceservice.domain.Resource;
+import com.epam.training.microservicefoundation.resourceservice.model.Resource;
 import org.springframework.stereotype.Repository;
 
 @Repository

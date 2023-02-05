@@ -1,5 +1,6 @@
 package com.epam.training.microservicefoundation.resourceservice.configuration;
 
+import com.epam.training.microservicefoundation.resourceservice.repository.CloudStorageRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Bean;
@@ -24,7 +25,11 @@ public class AwsS3Configuration {
     private int maxRetry;
 
     @Bean
-    public S3Client getS3Client() {
+    public CloudStorageRepository cloudStorageRepository() {
+        return new CloudStorageRepository(amazonS3BucketName, amazonS3Endpoint, s3Client());
+    }
+
+    private S3Client s3Client() {
         return S3Client.builder()
                 .overrideConfiguration(clientOverrideConfiguration())
                 .credentialsProvider(getEnvironmentVariableCredentialsProvider())
@@ -46,13 +51,5 @@ public class AwsS3Configuration {
     }
     private EnvironmentVariableCredentialsProvider getEnvironmentVariableCredentialsProvider() {
         return EnvironmentVariableCredentialsProvider.create();
-    }
-
-    public String getAmazonS3Endpoint() {
-        return amazonS3Endpoint;
-    }
-
-    public String getAmazonS3BucketName() {
-        return amazonS3BucketName;
     }
 }
