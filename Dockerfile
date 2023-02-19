@@ -1,5 +1,9 @@
-FROM openjdk:11-jdk as base
+FROM alpine:3.14 as base
 MAINTAINER Yusuf Murodov "yusuf.murodov1@gmail.com"
+RUN  apk update \
+  && apk upgrade \
+  && apk add --update openjdk11 tzdata curl unzip bash \
+  && rm -rf /var/cache/apk/*
 WORKDIR /app
 COPY . .
 RUN chmod +x ./gradlew

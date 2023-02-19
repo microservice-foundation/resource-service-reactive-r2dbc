@@ -9,12 +9,14 @@ import software.amazon.awssdk.core.ResponseInputStream;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
+import software.amazon.awssdk.services.s3.model.DeleteObjectResponse;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 import software.amazon.awssdk.services.s3.model.NoSuchKeyException;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectResponse;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Objects;
@@ -58,7 +60,7 @@ public class CloudStorageRepository {
             log.debug("File '{}' uploaded successfully to bucket '{}': response: {}", file.getOriginalFilename(),
                     bucketName, putObjectResponse);
 
-            return s3Endpoint + "/" + bucketName + "/" + file.getOriginalFilename();
+            return s3Endpoint + File.pathSeparator + bucketName + File.pathSeparator + file.getOriginalFilename();
         }
 
         IllegalStateException ex = new IllegalStateException(String.format("File '%1s' upload failed to bucket '%2s'",
@@ -93,7 +95,8 @@ public class CloudStorageRepository {
                 .key(name)
                 .build();
 
-        s3Client.deleteObject(request);
+        DeleteObjectResponse deleteObjectResponse = s3Client.deleteObject(request);
+        log.debug("Song file deleted from bucket successfully: {}", deleteObjectResponse);
     }
 
 }
