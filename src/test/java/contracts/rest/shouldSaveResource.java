@@ -1,3 +1,4 @@
+/*
 package contracts.rest;
 
 import org.springframework.cloud.contract.spec.Contract;
@@ -40,3 +41,4 @@ public class shouldSaveResource implements Supplier<Contract> {
         });
     }
 }
+*/

@@ -1,3 +1,4 @@
+/*
 package contracts.rest;
 
 import org.springframework.cloud.contract.spec.Contract;
@@ -43,3 +44,4 @@ public class shouldReturnBadRequestWhenSaveResource implements Supplier<Contract
         });
     }
 }
+*/

@@ -1,133 +1,173 @@
 package com.epam.training.microservicefoundation.resourceservice.repository.resourcedatabase;
 
-import com.epam.training.microservicefoundation.resourceservice.model.Resource;
-import com.epam.training.microservicefoundation.resourceservice.repository.ResourceRepository;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.InvalidDataAccessApiUsageException;
-import org.springframework.orm.ObjectOptimisticLockingFailureException;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.jdbc.Sql;
-
-import java.time.LocalDateTime;
-import java.util.Optional;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@DataJpaTest
+import com.epam.training.microservicefoundation.resourceservice.configuration.DatasourceConfiguration;
+import com.epam.training.microservicefoundation.resourceservice.model.Resource;
+import com.epam.training.microservicefoundation.resourceservice.repository.ResourceRepository;
+import java.time.Duration;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.data.r2dbc.DataR2dbcTest;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.TransientDataAccessResourceException;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestPropertySource;
+import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
+
+@DataR2dbcTest
 @ExtendWith(PostgresExtension.class)
 @DirtiesContext
-@Sql(value = "/sql/data.sql")
+@ContextConfiguration(classes = DatasourceConfiguration.class)
 @TestPropertySource(locations = "classpath:application.properties")
 class ResourceRepositoryTest {
-    @Autowired
-    ResourceRepository resourceRepository;
+  @Autowired
+  ResourceRepository resourceRepository;
 
-    @Test
-    void shouldSaveResource() {
-        String path = "song/example.mp3";
-        LocalDateTime createdDate = LocalDateTime.now();
-        Resource resource = new Resource.Builder(path, path.split("/")[1])
-                                    .build();
-        Resource result = resourceRepository.persist(resource);
+  @Test
+  void shouldSaveResource() {
+    Resource resource = new Resource.Builder("test-file-key", "test-file-name")
+        .build();
 
-        assertNotNull(result);
-        assertTrue(result.getId() > 0L);
-        assertEquals(path, result.getPath());
-        assertTrue(createdDate.isBefore(result.getCreatedDate()));
-    }
+    Mono<Resource> resultMono = resourceRepository.save(resource);
+    StepVerifier
+        .create(resultMono)
+        .assertNext(result -> {
+          assertTrue(result.getId() > 0L);
+          assertEquals(resource.getKey(), result.getKey());
+          assertEquals(resource.getName(), result.getName());
+          assertNotNull(result.getCreatedDate());
+          assertNotNull(result.getLastModifiedDate());
+        })
+        .verifyComplete();
+  }
 
-    @Test
-    void shouldThrowExceptionWhenSaveResourceWithNullPath() {
-        Resource resource = new Resource.Builder(null, "test.mp3").build();
-        assertThrows(DataIntegrityViolationException.class, ()-> resourceRepository.persist(resource));
-    }
+  @Test
+  void shouldThrowExceptionWhenSaveResourceWithNullPath() {
+    Resource resource = new Resource.Builder(null, "test.mp3").build();
+    Mono<Resource> resultMono = resourceRepository.save(resource);
+    StepVerifier
+        .create(resultMono)
+        .expectError(DataIntegrityViolationException.class)
+        .verify();
+  }
 
-    @Test
-    void shouldThrowExceptionWhenSaveResourceWithExistingPathAndName() {
-        Resource resource = new Resource.Builder("example/mess-code.mp3", "mess-code.mp3").build();
+  @Test
+  void shouldThrowExceptionWhenSaveResourceWithExistingPathAndName() {
+    Resource resource = new Resource.Builder("mess-code.mp3", "mess-code.mp3").build();
+    Mono<Resource> resultMono = resourceRepository.save(resource);
+    StepVerifier.create(resultMono)
+        .expectError(DataIntegrityViolationException.class)
+        .verify();
+  }
 
-        assertThrows(DataIntegrityViolationException.class, () -> resourceRepository.persistAndFlush(resource));
-    }
+  @Test
+  void shouldFindResourceById() {
+    Resource resource = new Resource.Builder("find-by-id.mp3", "find-by-id.mp3").build();
+    Mono<Resource> resultMono = resourceRepository.save(resource).flatMap(result -> resourceRepository.findById(result.getId()));
+    StepVerifier.create(resultMono)
+        .assertNext(result -> {
+          assertTrue(result.getId() > 0L);
+          assertEquals(resource.getKey(), result.getKey());
+          assertEquals(resource.getName(), result.getName());
+          assertNotNull(result.getCreatedDate());
+          assertNotNull(result.getLastModifiedDate());
+        })
+        .verifyComplete();
+  }
 
-    @Test
-    void shouldFindResourceById() {
-        Resource resource = new Resource.Builder("test/find-by-id.mp3", "find-by-id.mp3").build();
-        Resource result = resourceRepository.persistAndFlush(resource);
-        Optional<Resource> optionalResourceResult = resourceRepository.findById(resource.getId());
+  @Test
+  void shouldReturnEmptyValueWhenFindResourceById() {
+    long id = 439_990_999_598_833L;
+    StepVerifier.create(resourceRepository.findById(id))
+        .expectSubscription()
+        .expectNoEvent(Duration.ofMillis(500))
+        .expectComplete();
+  }
 
-        assertTrue(optionalResourceResult.isPresent());
-        assertEquals(result.getId(), optionalResourceResult.get().getId());
-    }
+  @Test
+  void shouldThrowExceptionWhenUpdateResourceWithNullPath() {
+    Resource resource = new Resource.Builder(null, "test.mp3").id(123L).build();
+    StepVerifier.create(resourceRepository.save(resource))
+        .expectError(DataIntegrityViolationException.class)
+        .verify();
+  }
 
-    @Test
-    void shouldReturnEmptyValueWhenFindResourceById() {
-        long id = 439_990_999_598_833L;
-        Optional<Resource> result = resourceRepository.findById(id);
+  @Test
+  void shouldThrowExceptionWhenUpdateResourceLastModifiedDateBeforeCreatedDate() {
+    Resource resource = new Resource.Builder(null, null)
+        .id(2L)
+        .build();
 
-        assertTrue(result.isEmpty());
-    }
-
-    @Test
-    void shouldThrowExceptionWhenUpdateResourceWithNullPath() {
-        Resource resource = new Resource.Builder( null, "test.mp3")
-                .id(2L)
-                .build();
-        assertThrows(DataIntegrityViolationException.class, () -> resourceRepository.updateAndFlush(resource));
-    }
-
-    @Test
-    void shouldThrowExceptionWhenUpdateResourceLastModifiedDateBeforeCreatedDate() {
-        Resource resource = new Resource.Builder( null, null)
-                .id(2L)
-                .build();
-
-        assertThrows(DataIntegrityViolationException.class, () -> resourceRepository.updateAndFlush(resource));
-    }
+    StepVerifier.create(resourceRepository.save(resource))
+        .expectError(DataIntegrityViolationException.class)
+        .verify();
+  }
 
 
-    @Test
-    void shouldThrowExceptionWhenUpdateResourceWithNotExistentId() {
-        Resource resource = new Resource.Builder("example/terminal.mp3", "terminal.mp3")
-                .id(191_999_000_234L)
-                .build();
+  @Test
+  void shouldThrowExceptionWhenUpdateResourceWithNotExistentId() {
+    Resource resource = new Resource.Builder("terminal.mp3", "terminal.mp3")
+        .id(191_999_000_234L)
+        .build();
 
-        assertThrows(ObjectOptimisticLockingFailureException.class, () -> resourceRepository.updateAndFlush(resource));
-    }
+    StepVerifier.create(resourceRepository.save(resource))
+        .expectError(TransientDataAccessResourceException.class)
+        .verify();
+  }
 
-    @Test
-    void shouldDeleteResource() {
-        Resource resource = new Resource.Builder( "example/mess-code.mp3", "mess-code.mp3")
-                .id(1L)
-                .build();
-        resourceRepository.delete(resource);
+  @Test
+  void shouldDeleteResource() {
+    Resource resource = new Resource.Builder("postal-code.mp3", "postal-code.mp3")
+        .id(123L)
+        .build();
 
-        Optional<Resource> result = resourceRepository.findById(resource.getId());
-        assertTrue(result.isEmpty());
-    }
+    StepVerifier.create(resourceRepository.delete(resource))
+        .expectSubscription()
+        .expectNoEvent(Duration.ofMillis(500))
+        .expectComplete();
+  }
 
     @Test
     void shouldThrowExceptionWhenDeleteResourceWithNull() {
-        assertThrows(InvalidDataAccessApiUsageException.class, () -> resourceRepository.delete(null));
+        assertThrows(IllegalArgumentException.class, () -> resourceRepository.delete(null));
+    }
+
+    @Test
+    void shouldDeleteNothingWhenDeleteResourceWithNonExistentResource() {
+      Resource resource = new Resource.Builder("delete-non-existent.mp3", "delete-non-existent.mp3")
+          .id(18889L)
+          .build();
+
+      StepVerifier.create(resourceRepository.delete(resource))
+          .expectSubscription()
+          .expectNoEvent(Duration.ofMillis(500))
+          .expectComplete();
     }
 
     @Test
     void shouldDeleteById() {
         Resource resource = new Resource.Builder(
-                "example/to-delete.mp3", "to-delete.mp3")
+                "to-delete-by-id.mp3", "to-delete-by-id.mp3.mp3")
                 .build();
-        Resource result = resourceRepository.persistAndFlush(resource);
-        resourceRepository.deleteById(result.getId());
 
-        boolean isExistent = resourceRepository.existsById(result.getId());
-        assertFalse(isExistent);
+        StepVerifier.create(resourceRepository.save(resource).flatMap(result -> resourceRepository.deleteById(result.getId())))
+            .expectSubscription()
+            .expectNoEvent(Duration.ofMillis(500))
+            .expectComplete();
+    }
+
+    @Test
+    void shouldDeleteNothingWhenDeleteByNonExistentResourceId() {
+      StepVerifier.create(resourceRepository.deleteById(123_144_566L))
+          .expectSubscription()
+          .expectNoEvent(Duration.ofMillis(500))
+          .expectComplete();
     }
 }

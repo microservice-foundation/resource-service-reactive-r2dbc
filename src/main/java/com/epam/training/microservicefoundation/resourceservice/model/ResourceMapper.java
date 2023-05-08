@@ -9,7 +9,6 @@ public class ResourceMapper implements Mapper<Resource, ResourceRecord> {
     public ResourceRecord mapToRecord(Resource resource) {
         if(resource == null)
             return null;
-
         return new ResourceRecord(resource.getId());
     }
 }

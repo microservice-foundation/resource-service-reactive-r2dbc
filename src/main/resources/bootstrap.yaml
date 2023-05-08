@@ -1,6 +1,6 @@
 spring:
   application:
-    name: ${MICROSERVICE_NAME:resource-service}
+    name: ${MICROSERVICE_NAME:resource-service-reactive-r2dbc}
   cloud:
     config:
       fail-fast: true

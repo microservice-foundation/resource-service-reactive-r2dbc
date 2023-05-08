@@ -33,8 +33,8 @@ public final class CloudStorageExtension implements BeforeAllCallback, AfterAllC
         localStack.execInContainer("awslocal", "s3", "mb", "s3://" + STORAGE_BUCKET_NAME);
 
         System.setProperty("aws.s3.endpoint", localStack.getEndpointOverride(S3).toString());
-        System.setProperty("aws.s3.credentials.access-key", localStack.getAccessKey());
-        System.setProperty("aws.s3.credentials.secret-key", localStack.getSecretKey());
+        System.setProperty("aws.s3.access-key", localStack.getAccessKey());
+        System.setProperty("aws.s3.secret-key", localStack.getSecretKey());
         System.setProperty("aws.credentials.region", localStack.getRegion());
     }
 }

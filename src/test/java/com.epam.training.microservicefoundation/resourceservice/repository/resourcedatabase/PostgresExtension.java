@@ -2,6 +2,7 @@ package com.epam.training.microservicefoundation.resourceservice.repository.reso
 
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
+import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -12,6 +13,7 @@ public final class PostgresExtension implements BeforeAllCallback, AfterAllCallb
 
     @Override
     public void afterAll(ExtensionContext context) {
+      database.stop();
     }
 
     @Override
@@ -19,9 +21,20 @@ public final class PostgresExtension implements BeforeAllCallback, AfterAllCallb
         database = new PostgreSQLContainer<>("postgres:12.9-alpine");
         database.start();
 
-        System.setProperty("spring.test.database.replace", "none");
-        System.setProperty("spring.datasource.url", database.getJdbcUrl());
+        System.setProperty("spring.datasource.url", r2dbcUrl(database));
         System.setProperty("spring.datasource.username", database.getUsername());
         System.setProperty("spring.datasource.password", database.getPassword());
     }
+
+  private String r2dbcUrl(PostgreSQLContainer<?> database) {
+    return String.format("r2dbc:postgresql://%s:%s/%s",
+        database.getHost(),
+        database.getFirstMappedPort(),
+        database.getDatabaseName());
+  }
+
+//  @Override
+//  public void beforeEach(ExtensionContext context) throws Exception {
+//    String deleteQuery = "DELETE FROM resource_service;";
+//    database.execInContainer("psql", "-U", "postgres", "-c", deleteQuery);  }
 }

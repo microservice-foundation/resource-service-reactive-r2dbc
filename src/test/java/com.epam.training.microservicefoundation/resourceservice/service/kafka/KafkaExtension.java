@@ -15,19 +15,15 @@ public class KafkaExtension implements BeforeAllCallback, AfterAllCallback {
     private KafkaContainer container;
 
     @Override
-    public void afterAll(ExtensionContext context) throws Exception {
-
+    public void afterAll(ExtensionContext context) {
+      container.stop();
     }
 
     @Override
-    public void beforeAll(ExtensionContext context) throws Exception {
+    public void beforeAll(ExtensionContext context) {
         container = new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:5.4.3"));
         container.start();
 
-        System.setProperty("kafka.bootstrap-servers", container.getBootstrapServers());
-//        System.setProperty("kafka.consumer.concurrency", "3");
-//        System.setProperty("kafka.topic.partitions.count", "3");
-//        System.setProperty("kafka.topic.replication.factor", "3");
-//        System.setProperty("kafka.topic.resources", "resources");
+        System.setProperty("spring.kafka.producer.bootstrap-servers", container.getBootstrapServers());
     }
 }

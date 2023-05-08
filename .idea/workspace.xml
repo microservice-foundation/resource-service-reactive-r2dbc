@@ -5,32 +5,85 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f51d7fbf-9ae1-496f-8aaa-2068c2edd23e" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/epam/training/microservicefoundation/resourceservice/repository/BaseJpaRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/epam/training/microservicefoundation/resourceservice/repository/BaseRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/epam/training/microservicefoundation/resourceservice/repository/implementation/BaseRepositoryImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/2/8/28d9419778610f790cbfd8ec5bfba002b5ba11db" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/c/6/c6c30396fc375ab951964d93260927d8f8f7c8c9" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/e/d/ed3b5b8b2c184b804603b4d6cdcd96b503908eb1" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/e/e/ee494be0c27e823096c7b8c70253b69306083bb9" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/f/0/f07866736216be0ee2aba49e392191aeae700a35" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/epam/training/microservicefoundation/resourceservice/api/ResourceHandler.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/epam/training/microservicefoundation/resourceservice/api/ResourceRouter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/epam/training/microservicefoundation/resourceservice/configuration/DatasourceConfiguration.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/epam/training/microservicefoundation/resourceservice/configuration/S3ClientConfigurationProperties.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/epam/training/microservicefoundation/resourceservice/configuration/WebFluxConfiguration.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/epam/training/microservicefoundation/resourceservice/model/UploadState.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/epam/training/microservicefoundation/resourceservice/model/exception/DeleteFailedException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/epam/training/microservicefoundation/resourceservice/model/exception/DownloadFailedException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/epam/training/microservicefoundation/resourceservice/model/exception/UploadFailedException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/db/schema.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/com.epam.training.microservicefoundation/resourceservice/api/ResourceApiTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/com.epam.training.microservicefoundation/resourceservice/configuration/AwsS3Configuration.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/com.epam.training.microservicefoundation/resourceservice/configuration/DatasourceConfiguration.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/com.epam.training.microservicefoundation/resourceservice/configuration/KafkaConfiguration.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/com.epam.training.microservicefoundation/resourceservice/configuration/S3ClientConfigurationProperties.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/com.epam.training.microservicefoundation/resourceservice/configuration/WebFluxConfiguration.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/com.epam.training.microservicefoundation/resourceservice/repository/s3storage/MockFilePart.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/resources/db/schema.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/2/2/22109ecfa2b799d8b74afd4ffb420a7b1f2ed330" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/6/2/6290eeeb8a435af68ad6fa32a978434b378fb072" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/6/5/656c640e78f99e2e4442a6d5ca2d59417535f5c0" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/7/d/7dfc818c3ff01e9b1382f15fbe616d0809a6ad9f" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/8/f/8f32db6d38f02eb566dd5303f6e351cf67a2885f" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/a/9/a96f9d5f3ce62dc3730984d8e01756520c738736" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/a/f/af428710fdbc029962d38f728a1906a1ae9223ac" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/index.pb" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/index.pb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradle.properties" beforeDir="false" afterPath="$PROJECT_DIR$/gradle.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/settings.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/settings.gradle" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/epam/training/microservicefoundation/resourceservice/ResourceServiceApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/epam/training/microservicefoundation/resourceservice/ResourceServiceApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/epam/training/microservicefoundation/resourceservice/domain/Resource.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/epam/training/microservicefoundation/resourceservice/domain/Resource.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/epam/training/microservicefoundation/resourceservice/domain/SongResourceRowMapper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/epam/training/microservicefoundation/resourceservice/api/ResourceController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/epam/training/microservicefoundation/resourceservice/api/ResourceExceptionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/epam/training/microservicefoundation/resourceservice/api/ResourceExceptionHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/epam/training/microservicefoundation/resourceservice/configuration/AwsS3Configuration.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/epam/training/microservicefoundation/resourceservice/configuration/AwsS3Configuration.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/epam/training/microservicefoundation/resourceservice/configuration/KafkaConfiguration.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/epam/training/microservicefoundation/resourceservice/configuration/KafkaConfiguration.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/epam/training/microservicefoundation/resourceservice/model/Resource.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/epam/training/microservicefoundation/resourceservice/model/Resource.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/epam/training/microservicefoundation/resourceservice/model/ResourceMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/epam/training/microservicefoundation/resourceservice/model/ResourceMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/epam/training/microservicefoundation/resourceservice/model/ResourceNotFoundException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/epam/training/microservicefoundation/resourceservice/model/exception/ResourceNotFoundException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/epam/training/microservicefoundation/resourceservice/repository/BaseJpaRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/epam/training/microservicefoundation/resourceservice/repository/BaseRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/epam/training/microservicefoundation/resourceservice/repository/CloudStorageRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/epam/training/microservicefoundation/resourceservice/repository/CloudStorageRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/epam/training/microservicefoundation/resourceservice/repository/JdbcRepository.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/epam/training/microservicefoundation/resourceservice/repository/ResourceRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/epam/training/microservicefoundation/resourceservice/repository/ResourceRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/epam/training/microservicefoundation/resourceservice/repository/implementation/BaseRepositoryImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/epam/training/microservicefoundation/resourceservice/service/Convertor.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/epam/training/microservicefoundation/resourceservice/service/ResourceService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/epam/training/microservicefoundation/resourceservice/service/ResourceService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/epam/training/microservicefoundation/resourceservice/service/Validator.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/epam/training/microservicefoundation/resourceservice/service/implementation/CsvFileConvertor.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/epam/training/microservicefoundation/resourceservice/service/implementation/IdParamValidator.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/epam/training/microservicefoundation/resourceservice/service/implementation/KafkaManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/epam/training/microservicefoundation/resourceservice/service/implementation/KafkaManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/epam/training/microservicefoundation/resourceservice/service/implementation/MultipartFileValidator.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/epam/training/microservicefoundation/resourceservice/service/implementation/ResourceServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/epam/training/microservicefoundation/resourceservice/service/implementation/ResourceServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/epam/training/microservicefoundation/resourceservice/util/ResourceSQL.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/logs/resource-service.log" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/logs/resource-service.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/resource-query.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/sql/create-schema.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/sql/data.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/resources/sql/data.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/sql/drop-schema.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/bootstrap.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/bootstrap.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com.epam.training.microservicefoundation/resourceservice/api/ResourceControllerTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com.epam.training.microservicefoundation/resourceservice/base/RestBase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com.epam.training.microservicefoundation/resourceservice/base/RestBase.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com.epam.training.microservicefoundation/resourceservice/configuration/AwsS3TestConfiguration.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com.epam.training.microservicefoundation/resourceservice/configuration/KafkaTestConfiguration.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com.epam.training.microservicefoundation/resourceservice/configuration/KafkaTopicTestConfiguration.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com.epam.training.microservicefoundation/resourceservice/configuration/KafkaTopicConfiguration.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com.epam.training.microservicefoundation/resourceservice/repository/resourcedatabase/PostgresExtension.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com.epam.training.microservicefoundation/resourceservice/repository/resourcedatabase/PostgresExtension.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/com.epam.training.microservicefoundation/resourceservice/repository/resourcedatabase/ResourceRepositoryTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com.epam.training.microservicefoundation/resourceservice/repository/resourcedatabase/ResourceRepositoryTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com.epam.training.microservicefoundation/resourceservice/repository/s3storage/CloudStorageExtension.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com.epam.training.microservicefoundation/resourceservice/repository/s3storage/CloudStorageExtension.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com.epam.training.microservicefoundation/resourceservice/repository/s3storage/CloudStorageRepositoryTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com.epam.training.microservicefoundation/resourceservice/repository/s3storage/CloudStorageRepositoryTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/com.epam.training.microservicefoundation/resourceservice/service/ResourceServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com.epam.training.microservicefoundation/resourceservice/service/ResourceServiceTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com.epam.training.microservicefoundation/resourceservice/service/convertor/CsvFileConvertorTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com.epam.training.microservicefoundation/resourceservice/service/kafka/FakeKafkaConsumer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com.epam.training.microservicefoundation/resourceservice/service/kafka/KafkaExtension.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com.epam.training.microservicefoundation/resourceservice/service/kafka/KafkaExtension.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com.epam.training.microservicefoundation/resourceservice/service/kafka/KafkaManagerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com.epam.training.microservicefoundation/resourceservice/service/kafka/KafkaManagerTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com.epam.training.microservicefoundation/resourceservice/service/validator/IdParamValidatorTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com.epam.training.microservicefoundation/resourceservice/service/validator/MultipartFileValidatorTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/contracts/rest/shouldDeleteResources.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/contracts/rest/shouldDeleteResources.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/contracts/rest/shouldGetResourceById.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/contracts/rest/shouldGetResourceById.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/contracts/rest/shouldReturnBadRequestWhenDeleteResources.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/contracts/rest/shouldReturnBadRequestWhenDeleteResources.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/contracts/rest/shouldReturnBadRequestWhenSaveResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/contracts/rest/shouldReturnBadRequestWhenSaveResource.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/contracts/rest/shouldReturnNotFoundWhenGetNonexistentResourceById.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/contracts/rest/shouldReturnNotFoundWhenGetNonexistentResourceById.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/contracts/rest/shouldSaveResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/contracts/rest/shouldSaveResource.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/sql/data.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/resources/db/data.sql" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -51,7 +104,17 @@
         <task path="$PROJECT_DIR$">
           <activation />
         </task>
-        <projects_view />
+        <projects_view>
+          <tree_state>
+            <expand>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="resource-service-reactive-r2dbc" type="f1a62948:ProjectNode" />
+              </path>
+            </expand>
+            <select />
+          </tree_state>
+        </projects_view>
       </state>
     </system>
   </component>
@@ -77,42 +140,85 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "last_opened_file_path": "/Users/Yusuf_Murodov/Local/epam/traning/microservices/resource-service/src/main/java/com/epam/training/microservicefoundation/resourceservice/repository"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;ToolWindowRun.ShowToolbar&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/Yusuf_Murodov/Local/epam/traning/microservices/resource-service/src/test/resources/db&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Libraries&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.6586207&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.sourceCode&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="com.epam.training.microservicefoundation.resourceservice.model.exception" />
+      <recent name="com.epam.training.microservicefoundation.resourceservice.model" />
+    </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/test/resources/db" />
+      <recent name="$PROJECT_DIR$/src/main/resources/db" />
       <recent name="$PROJECT_DIR$/src/main/java/com/epam/training/microservicefoundation/resourceservice/repository" />
       <recent name="$PROJECT_DIR$/src/test/resources" />
       <recent name="$PROJECT_DIR$/src/test/java" />
-      <recent name="$PROJECT_DIR$/src/main/resources" />
-      <recent name="$PROJECT_DIR$/src/main/java" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/test/resources" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.epam.training.microservicefoundation.resourceservice.configuration" />
       <recent name="com.epam.training.microservicefoundation.resourceservice.domain" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.ResourceServiceApplication">
-    <configuration name="ResourceServiceApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.epam.training.microservicefoundation.resourceservice.ResourceServiceApplication" />
-      <module name="resource-service.main" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.epam.training.microservicefoundation.resourceservice.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
+  <component name="RunManager" selected="Gradle.RestTest.validate_shouldGetResourceById">
+    <configuration name="CloudStorageRepositoryTest" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":test" />
+            <option value="--tests" />
+            <option value="&quot;com.epam.training.microservicefoundation.resourceservice.repository.s3storage.CloudStorageRepositoryTest&quot;" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <method v="2" />
+    </configuration>
+    <configuration name="ResourceApiTest" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":test" />
+            <option value="--tests" />
+            <option value="&quot;com.epam.training.microservicefoundation.resourceservice.api.ResourceApiTest&quot;" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <method v="2" />
     </configuration>
     <configuration name="ResourceRepositoryTest" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
@@ -137,7 +243,7 @@
       <DebugAllEnabled>false</DebugAllEnabled>
       <method v="2" />
     </configuration>
-    <configuration name="ResourceRepositoryTest.shouldSaveResource" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+    <configuration name="ResourceServiceTest" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
@@ -150,7 +256,7 @@
           <list>
             <option value=":test" />
             <option value="--tests" />
-            <option value="&quot;com.epam.training.microservicefoundation.resourceservice.repository.resourcedatabase.ResourceRepositoryTest.shouldSaveResource&quot;" />
+            <option value="&quot;com.epam.training.microservicefoundation.resourceservice.service.ResourceServiceTest&quot;" />
           </list>
         </option>
         <option name="vmOptions" />
@@ -160,7 +266,7 @@
       <DebugAllEnabled>false</DebugAllEnabled>
       <method v="2" />
     </configuration>
-    <configuration name="ResourceRepositoryTest.shouldThrowExceptionWhenUpdateResourceWithNotExistentId" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+    <configuration name="RestTest.validate_shouldGetResourceById" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
@@ -171,9 +277,9 @@
         </option>
         <option name="taskNames">
           <list>
-            <option value=":test" />
+            <option value=":contractTest" />
             <option value="--tests" />
-            <option value="&quot;com.epam.training.microservicefoundation.resourceservice.repository.resourcedatabase.ResourceRepositoryTest.shouldThrowExceptionWhenUpdateResourceWithNotExistentId&quot;" />
+            <option value="&quot;com.epam.training.microservicefoundation.resourceservice.base.RestTest.validate_shouldGetResourceById&quot;" />
           </list>
         </option>
         <option name="vmOptions" />
@@ -183,44 +289,33 @@
       <DebugAllEnabled>false</DebugAllEnabled>
       <method v="2" />
     </configuration>
-    <configuration name="ResourceRepositoryTest.shouldUpdateResourcePathWhenUpdateResource" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" value="" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list>
-            <option value=":test" />
-            <option value="--tests" />
-            <option value="&quot;com.epam.training.microservicefoundation.resourceservice.repository.resourcedatabase.ResourceRepositoryTest.shouldUpdateResourcePathWhenUpdateResource&quot;" />
-          </list>
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
-      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
-      <DebugAllEnabled>false</DebugAllEnabled>
-      <method v="2" />
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="resource-service" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
     </configuration>
-    <configuration default="true" type="aws.lambda" factoryName="Remote">
-      <option name="credentialProviderId" />
-      <option name="regionId" />
-      <option name="functionName" />
-      <option name="input" />
-      <option name="inputIsFile" value="false" />
-      <method v="2" />
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="resource-service" />
+      <option name="filePath" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
     </configuration>
+    <list>
+      <item itemvalue="Gradle.CloudStorageRepositoryTest" />
+      <item itemvalue="Gradle.ResourceApiTest" />
+      <item itemvalue="Gradle.ResourceRepositoryTest" />
+      <item itemvalue="Gradle.RestTest.validate_shouldGetResourceById" />
+      <item itemvalue="Gradle.ResourceServiceTest" />
+    </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.ResourceServiceApplication" />
+        <item itemvalue="Gradle.RestTest.validate_shouldGetResourceById" />
+        <item itemvalue="Gradle.ResourceServiceTest" />
+        <item itemvalue="Gradle.CloudStorageRepositoryTest" />
         <item itemvalue="Gradle.ResourceRepositoryTest" />
-        <item itemvalue="Gradle.ResourceRepositoryTest.shouldThrowExceptionWhenUpdateResourceWithNotExistentId" />
-        <item itemvalue="Gradle.ResourceRepositoryTest.shouldSaveResource" />
-        <item itemvalue="Gradle.ResourceRepositoryTest.shouldUpdateResourcePathWhenUpdateResource" />
+        <item itemvalue="Gradle.ResourceApiTest" />
       </list>
     </recent_temporary>
   </component>
@@ -250,11 +345,50 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/epam/training/microservicefoundation/resourceservice/service/implementation/ResourceServiceImpl.java</url>
-          <line>60</line>
-          <option name="timeStamp" value="2" />
+          <url>file://$PROJECT_DIR$/src/main/java/com/epam/training/microservicefoundation/resourceservice/model/ResourceMapper.java</url>
+          <line>9</line>
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/epam/training/microservicefoundation/resourceservice/repository/CloudStorageRepository.java</url>
+          <line>61</line>
+          <option name="timeStamp" value="8" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/test/java/com.epam.training.microservicefoundation/resourceservice/api/ResourceApiTest.java</url>
+          <line>280</line>
+          <option name="timeStamp" value="25" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/epam/training/microservicefoundation/resourceservice/service/implementation/KafkaManager.java</url>
+          <line>26</line>
+          <option name="timeStamp" value="26" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/test/java/com.epam.training.microservicefoundation/resourceservice/configuration/KafkaTopicConfiguration.java</url>
+          <line>27</line>
+          <option name="timeStamp" value="28" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/test/java/com.epam.training.microservicefoundation/resourceservice/configuration/KafkaConfiguration.java</url>
+          <line>41</line>
+          <option name="timeStamp" value="29" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/epam/training/microservicefoundation/resourceservice/service/implementation/KafkaManager.java</url>
+          <line>28</line>
+          <option name="timeStamp" value="31" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
+    <pin-to-top-manager>
+      <pinned-members>
+        <PinnedItemInfo parentTag="org.junit.jupiter.engine.descriptor.ClassExtensionContext" memberName="testDescriptor" />
+      </pinned-members>
+    </pin-to-top-manager>
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
 </project>
