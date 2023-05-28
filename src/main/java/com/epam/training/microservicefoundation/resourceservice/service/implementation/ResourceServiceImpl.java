@@ -63,10 +63,10 @@ public class ResourceServiceImpl implements ResourceService {
   @Override
   public Flux<ResourceRecord> deleteByIds(Flux<Long> ids) {
     log.info("Deleting file(s) by id(s)");
-    return ids
-        .switchIfEmpty(Mono.error(new IllegalArgumentException("Id param is not validated, check your ids")))
+    return ids.switchIfEmpty(Mono.error(new IllegalArgumentException("Id param is not validated, check your ids")))
         .flatMap(resourceRepository::findById)
-        .flatMap(resource -> storageRepository.deleteByFileKey(resource.getKey())
-            .flatMap(result -> resourceRepository.delete(resource)).thenReturn(new ResourceRecord(resource.getId())));
+        .flatMap(resource -> storageRepository.deleteByFileKey(resource.getKey()).thenReturn(resource))
+        .flatMap(resource -> resourceRepository.delete(resource).thenReturn(resource))
+        .map(resource -> new ResourceRecord(resource.getId()));
   }
 }
