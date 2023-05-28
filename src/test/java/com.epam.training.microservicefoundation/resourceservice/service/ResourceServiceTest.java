@@ -16,7 +16,7 @@ import com.epam.training.microservicefoundation.resourceservice.model.exception.
 import com.epam.training.microservicefoundation.resourceservice.model.exception.UploadFailedException;
 import com.epam.training.microservicefoundation.resourceservice.repository.CloudStorageRepository;
 import com.epam.training.microservicefoundation.resourceservice.repository.ResourceRepository;
-import com.epam.training.microservicefoundation.resourceservice.repository.s3storage.MockFilePart;
+import com.epam.training.microservicefoundation.resourceservice.repository.MockFilePart;
 import com.epam.training.microservicefoundation.resourceservice.service.implementation.KafkaManager;
 import com.epam.training.microservicefoundation.resourceservice.service.implementation.ResourceServiceImpl;
 import java.io.IOException;
@@ -38,7 +38,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.codec.multipart.FilePart;
-import org.springframework.kafka.support.SendResult;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.kafka.sender.SenderResult;

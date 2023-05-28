@@ -1,13 +1,12 @@
-package com.epam.training.microservicefoundation.resourceservice.repository.resourcedatabase;
+package com.epam.training.microservicefoundation.resourceservice.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.epam.training.microservicefoundation.resourceservice.configuration.DatasourceConfiguration;
+import com.epam.training.microservicefoundation.resourceservice.config.DatasourceConfiguration;
 import com.epam.training.microservicefoundation.resourceservice.model.Resource;
-import com.epam.training.microservicefoundation.resourceservice.repository.ResourceRepository;
 import java.time.Duration;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

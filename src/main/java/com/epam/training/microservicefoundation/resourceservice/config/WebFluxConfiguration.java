@@ -1,23 +1,12 @@
-package com.epam.training.microservicefoundation.resourceservice.configuration;
+package com.epam.training.microservicefoundation.resourceservice.config;
 
 import com.epam.training.microservicefoundation.resourceservice.api.ResourceExceptionHandler;
-import com.epam.training.microservicefoundation.resourceservice.api.ResourceHandler;
-import com.epam.training.microservicefoundation.resourceservice.api.ResourceRouter;
-import com.epam.training.microservicefoundation.resourceservice.model.Mapper;
-import com.epam.training.microservicefoundation.resourceservice.model.Resource;
-import com.epam.training.microservicefoundation.resourceservice.model.ResourceRecord;
-import com.epam.training.microservicefoundation.resourceservice.repository.CloudStorageRepository;
-import com.epam.training.microservicefoundation.resourceservice.repository.ResourceRepository;
-import com.epam.training.microservicefoundation.resourceservice.service.ResourceService;
-import com.epam.training.microservicefoundation.resourceservice.service.implementation.KafkaManager;
-import com.epam.training.microservicefoundation.resourceservice.service.implementation.ResourceServiceImpl;
 import org.springframework.boot.autoconfigure.web.WebProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.web.reactive.error.DefaultErrorAttributes;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.codec.ServerCodecConfigurer;
@@ -26,9 +15,8 @@ import org.springframework.http.codec.multipart.MultipartHttpMessageReader;
 import org.springframework.web.reactive.config.EnableWebFlux;
 import org.springframework.web.reactive.config.WebFluxConfigurer;
 
-@TestConfiguration
+@Configuration
 @EnableWebFlux
-@Import(value = {ResourceRouter.class, ResourceHandler.class})
 @EnableConfigurationProperties(WebProperties.class)
 public class WebFluxConfiguration implements WebFluxConfigurer {
 
@@ -68,12 +56,5 @@ public class WebFluxConfiguration implements WebFluxConfigurer {
         non-file parts are rejected with DataBufferLimitException.
         */
     configurer.defaultCodecs().maxInMemorySize(512 * 1024);
-  }
-
-  @Bean
-  public ResourceService service(CloudStorageRepository cloudStorageRepository, ResourceRepository resourceRepository,
-      Mapper<Resource, ResourceRecord> mapper, KafkaManager kafkaManager) {
-
-    return new ResourceServiceImpl(resourceRepository, cloudStorageRepository, mapper, kafkaManager);
   }
 }

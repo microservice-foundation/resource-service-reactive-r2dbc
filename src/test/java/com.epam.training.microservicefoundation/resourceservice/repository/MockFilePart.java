@@ -1,4 +1,4 @@
-package com.epam.training.microservicefoundation.resourceservice.repository.s3storage;
+package com.epam.training.microservicefoundation.resourceservice.repository;
 
 import java.io.File;
 import java.nio.file.Path;

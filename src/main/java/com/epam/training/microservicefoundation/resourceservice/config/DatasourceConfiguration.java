@@ -1,4 +1,4 @@
-package com.epam.training.microservicefoundation.resourceservice.configuration;
+package com.epam.training.microservicefoundation.resourceservice.config;
 
 import io.r2dbc.spi.ConnectionFactory;
 import org.springframework.context.annotation.Bean;

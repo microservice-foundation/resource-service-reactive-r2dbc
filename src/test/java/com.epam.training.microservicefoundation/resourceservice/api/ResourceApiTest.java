@@ -8,7 +8,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
-import com.epam.training.microservicefoundation.resourceservice.configuration.WebFluxConfiguration;
+import com.epam.training.microservicefoundation.resourceservice.config.WebFluxConfiguration;
 import com.epam.training.microservicefoundation.resourceservice.model.Mapper;
 import com.epam.training.microservicefoundation.resourceservice.model.Resource;
 import com.epam.training.microservicefoundation.resourceservice.model.ResourceRecord;
@@ -28,7 +28,6 @@ import java.nio.file.Paths;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.io.FileSystemResource;
@@ -53,7 +52,6 @@ import software.amazon.awssdk.services.s3.model.UploadPartResponse;
 
 @WebFluxTest
 @DirtiesContext
-@AutoConfigureWebTestClient
 @ContextConfiguration(classes = {WebFluxConfiguration.class})
 @TestPropertySource(locations = "classpath:application.properties")
 class ResourceApiTest {

@@ -1,4 +1,4 @@
-package com.epam.training.microservicefoundation.resourceservice.configuration;
+package com.epam.training.microservicefoundation.resourceservice.config;
 
 import com.epam.training.microservicefoundation.resourceservice.model.ResourceRecord;
 import org.apache.kafka.clients.admin.NewTopic;

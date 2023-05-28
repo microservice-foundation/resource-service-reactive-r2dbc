@@ -1,6 +1,6 @@
 package com.epam.training.microservicefoundation.resourceservice.repository;
 
-import com.epam.training.microservicefoundation.resourceservice.configuration.S3ClientConfigurationProperties;
+import com.epam.training.microservicefoundation.resourceservice.config.S3ClientConfigurationProperties;
 import com.epam.training.microservicefoundation.resourceservice.model.UploadState;
 import com.epam.training.microservicefoundation.resourceservice.model.exception.DeleteFailedException;
 import com.epam.training.microservicefoundation.resourceservice.model.exception.DownloadFailedException;

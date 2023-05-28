@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import reactor.util.function.Tuple2;
 import software.amazon.awssdk.core.async.ResponsePublisher;
 import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 
@@ -43,7 +42,6 @@ public class ResourceServiceImpl implements ResourceService {
   @Override
   public Mono<ResourceRecord> save(Mono<FilePart> file) {
     log.info("Saving file");
-
     return file
         .switchIfEmpty(Mono.error(new IllegalArgumentException("File is not validated, please check your file")))
         .zipWhen(storageRepository::upload)

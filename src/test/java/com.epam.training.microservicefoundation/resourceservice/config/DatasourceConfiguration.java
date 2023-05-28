@@ -1,4 +1,4 @@
-package com.epam.training.microservicefoundation.resourceservice.configuration;
+package com.epam.training.microservicefoundation.resourceservice.config;
 
 import io.r2dbc.spi.ConnectionFactory;
 import org.springframework.boot.test.context.TestConfiguration;
@@ -25,16 +25,4 @@ public class DatasourceConfiguration {
     initializer.setDatabasePopulator(populator);
     return initializer;
   }
-
-//  @Bean
-//  public ConnectionFactory connectionFactory() {
-//    return new PostgresqlConnectionFactory(
-//        PostgresqlConnectionConfiguration.builder()
-//            .host("localhost")
-//            .port(5432)
-//            .database("resource_service")
-//            .username(username)
-//            .password(password)
-//            .build());
-//  }
 }

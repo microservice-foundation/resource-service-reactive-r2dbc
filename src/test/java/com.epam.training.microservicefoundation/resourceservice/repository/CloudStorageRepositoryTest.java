@@ -1,13 +1,12 @@
-package com.epam.training.microservicefoundation.resourceservice.repository.s3storage;
+package com.epam.training.microservicefoundation.resourceservice.repository;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.epam.training.microservicefoundation.resourceservice.configuration.AwsS3Configuration;
-import com.epam.training.microservicefoundation.resourceservice.configuration.S3ClientConfigurationProperties;
-import com.epam.training.microservicefoundation.resourceservice.repository.CloudStorageRepository;
+import com.epam.training.microservicefoundation.resourceservice.config.AwsS3Configuration;
+import com.epam.training.microservicefoundation.resourceservice.config.S3ClientConfigurationProperties;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;

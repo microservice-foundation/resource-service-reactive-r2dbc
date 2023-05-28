@@ -1,9 +1,13 @@
 package com.epam.training.microservicefoundation.resourceservice.api;
 
+import com.epam.training.microservicefoundation.resourceservice.model.ResourceRecord;
 import com.epam.training.microservicefoundation.resourceservice.service.ResourceService;
+import com.epam.training.microservicefoundation.resourceservice.service.implementation.KafkaManager;
 import java.net.URI;
 import java.nio.ByteBuffer;
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -21,36 +25,36 @@ import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 @Component
 public class ResourceHandler {
   private final ResourceService service;
-
+  private static final Logger log = LoggerFactory.getLogger(ResourceHandler.class);
   @Autowired
   public ResourceHandler(ResourceService service) {
     this.service = service;
   }
 
   public Mono<ServerResponse> save(ServerRequest request) {
+    log.info("Incoming request: {}", request);
     Mono<MultiValueMap<String, Part>> multiValueMapMono = request.body(BodyExtractors.toMultipartData());
     Mono<FilePart> filePart = multiValueMapMono.flatMap(map -> Mono.justOrEmpty(map.getFirst("file"))).ofType(FilePart.class);
 
-    return service.save(filePart)
-        .flatMap(resourceRecord -> ServerResponse.created(URI.create(request.path() + "/" + resourceRecord.getId()))
-            .contentType(MediaType.APPLICATION_JSON)
-            .bodyValue(resourceRecord));
+    return ServerResponse.created(URI.create(request.path()))
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(service.save(filePart), ResourceRecord.class);
   }
 
   public Mono<ServerResponse> deleteByIds(ServerRequest request) {
+    log.info("Incoming request: {}", request);
     Flux<Long> idsFlux = request
         .queryParam("id")
         .map(string -> Flux.fromArray(string.split(",")).map(Long::parseLong))
         .orElse(Flux.empty());
 
-    return service.deleteByIds(idsFlux)
-        .collectList()
-        .flatMap(resourceRecords -> ServerResponse.ok()
-            .contentType(MediaType.APPLICATION_JSON)
-            .bodyValue(resourceRecords));
+    return ServerResponse.ok()
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(service.deleteByIds(idsFlux), ResourceRecord.class);
   }
 
   public Mono<ServerResponse> getById(ServerRequest request) {
+    log.info("Incoming request: {}", request);
     long id = Long.parseLong(request.pathVariable("id"));
     return service.getById(id)
         .flatMap(responsePublisher -> ServerResponse.ok()

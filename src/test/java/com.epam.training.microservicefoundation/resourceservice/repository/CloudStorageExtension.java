@@ -1,4 +1,4 @@
-package com.epam.training.microservicefoundation.resourceservice.repository.s3storage;
+package com.epam.training.microservicefoundation.resourceservice.repository;
 
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;

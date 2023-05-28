@@ -4,8 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.epam.training.microservicefoundation.resourceservice.configuration.KafkaConfiguration;
-import com.epam.training.microservicefoundation.resourceservice.configuration.KafkaTopicConfiguration;
+import com.epam.training.microservicefoundation.resourceservice.config.KafkaConfiguration;
+import com.epam.training.microservicefoundation.resourceservice.config.KafkaTopicConfiguration;
 import com.epam.training.microservicefoundation.resourceservice.model.ResourceRecord;
 import com.epam.training.microservicefoundation.resourceservice.service.implementation.KafkaManager;
 import org.junit.jupiter.api.Test;
