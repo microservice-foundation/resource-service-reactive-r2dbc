@@ -1,7 +1,10 @@
 package com.epam.training.microservicefoundation.resourceservice.repository;
 
-import com.epam.training.microservicefoundation.resourceservice.config.S3ClientConfigurationProperties;
+import com.epam.training.microservicefoundation.resourceservice.config.properties.S3ClientConfigurationProperties;
+import com.epam.training.microservicefoundation.resourceservice.model.ResourceFile;
+import com.epam.training.microservicefoundation.resourceservice.model.StorageDTO;
 import com.epam.training.microservicefoundation.resourceservice.model.UploadState;
+import com.epam.training.microservicefoundation.resourceservice.model.exception.CopyObjectFailedException;
 import com.epam.training.microservicefoundation.resourceservice.model.exception.DeleteFailedException;
 import com.epam.training.microservicefoundation.resourceservice.model.exception.DownloadFailedException;
 import com.epam.training.microservicefoundation.resourceservice.model.exception.UploadFailedException;
@@ -9,6 +12,7 @@ import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
@@ -18,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.http.MediaType;
 import org.springframework.http.codec.multipart.FilePart;
+import org.springframework.util.StringUtils;
 import reactor.core.publisher.Mono;
 import software.amazon.awssdk.core.SdkResponse;
 import software.amazon.awssdk.core.async.AsyncRequestBody;
@@ -29,6 +34,8 @@ import software.amazon.awssdk.services.s3.model.CompleteMultipartUploadRequest;
 import software.amazon.awssdk.services.s3.model.CompleteMultipartUploadResponse;
 import software.amazon.awssdk.services.s3.model.CompletedMultipartUpload;
 import software.amazon.awssdk.services.s3.model.CompletedPart;
+import software.amazon.awssdk.services.s3.model.CopyObjectRequest;
+import software.amazon.awssdk.services.s3.model.CopyObjectResponse;
 import software.amazon.awssdk.services.s3.model.CreateMultipartUploadRequest;
 import software.amazon.awssdk.services.s3.model.CreateMultipartUploadResponse;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
@@ -40,7 +47,6 @@ import software.amazon.awssdk.services.s3.model.UploadPartResponse;
 
 
 public class CloudStorageRepository {
-
   private static final Logger log = LoggerFactory.getLogger(CloudStorageRepository.class);
   private final S3ClientConfigurationProperties properties;
   private final S3AsyncClient s3Client;
@@ -54,32 +60,39 @@ public class CloudStorageRepository {
     checkExceptions = new HashMap<>();
     checkExceptions.put(DeleteObjectResponse.class, response -> Mono.error(new DeleteFailedException(response)));
     checkExceptions.put(GetObjectResponse.class, response -> Mono.error(new DownloadFailedException(response)));
-    checkExceptions.put(CreateMultipartUploadResponse.class, response -> Mono.error( new UploadFailedException(response)));
+    checkExceptions.put(CreateMultipartUploadResponse.class, response -> Mono.error(new UploadFailedException(response)));
+    checkExceptions.put(CopyObjectResponse.class, response -> Mono.error(new CopyObjectFailedException(response)));
   }
 
-  public Mono<String> upload(FilePart filePart) {
-    log.info("Uploading file '{}' to bucket '{}'", filePart.filename(), properties.getBucketName());
-    return saveFile(filePart);
+  public Mono<ResourceFile> upload(ResourceFile file) {
+    log.info("Uploading file '{}' to storage '{}'", file.getFilePart().filename(), file.getStorage());
+    return saveFile(file);
   }
 
-  private Mono<String> saveFile(FilePart filePart) {
-    String fileKey = UUID.randomUUID().toString();
-    log.info("SaveFile: filekey={}, filename={}", fileKey, filePart.filename());
-    String filename = filePart.filename() != null && !filePart.filename().isEmpty() ? filePart.filename() : fileKey;
-    Map<String, String> metadata = new HashMap<>();
+  private Mono<ResourceFile> saveFile(ResourceFile file) {
+    final String rawKey = UUID.randomUUID().toString();
+    final FilePart filePart = file.getFilePart();
+    final String filename = StringUtils.hasText(filePart.filename()) ? filePart.filename() : rawKey;
+
+    final Map<String, String> metadata = new HashMap<>();
     metadata.put("filename", filename);
 
-    MediaType mediaType = filePart.headers().getContentType() != null ? filePart.headers().getContentType() :
-        MediaType.APPLICATION_OCTET_STREAM;
+    final MediaType mediaType = Objects.isNull(filePart.headers().getContentType()) ? MediaType.APPLICATION_OCTET_STREAM :
+       filePart.headers().getContentType();
 
-    UploadState uploadState = new UploadState(properties.getBucketName(), fileKey);
+    final String key = file.getStorage().getPath() + rawKey;
+    final String bucket = file.getStorage().getBucket();
+    final UploadState uploadState = new UploadState(bucket, key);
     CompletableFuture<CreateMultipartUploadResponse> uploadRequest =
         s3Client.createMultipartUpload(CreateMultipartUploadRequest.builder()
             .contentType(mediaType.toString())
-            .key(fileKey)
+            .key(key)
             .metadata(metadata)
-            .bucket(properties.getBucketName())
+            .bucket(bucket)
             .build());
+
+    log.info("SaveFile: filekey={}, filename={}", key, filename);
+
     return Mono.fromFuture(uploadRequest)
         .flatMapMany(response -> {
           checkResult(response);
@@ -88,7 +101,7 @@ public class CloudStorageRepository {
         })
         .bufferUntil(buffer -> {
           uploadState.buffered += buffer.readableByteCount();
-          if (uploadState.buffered >= properties.getMultipartMinPartSize()) {
+          if (uploadState.buffered >= this.properties.getMultipartMinPartSize()) {
             log.debug("BufferUntil: returning true, bufferedBytes={}, partCounter={}, uploadId={}", uploadState.buffered,
                 uploadState.partCounter, uploadState.uploadId);
 
@@ -106,9 +119,9 @@ public class CloudStorageRepository {
           return state;
         })
         .flatMap(this::completeUpload)
-        .map(response -> {
-          checkResult(response);
-          return uploadState.filekey;
+        .flatMap(response -> {
+          log.debug("Saving file '{}' result {} to {} bucket ", filename, response, bucket);
+          return checkResult(response).thenReturn(file.withFilename(filename).withKey(uploadState.filekey));
         });
   }
 
@@ -171,31 +184,54 @@ public class CloudStorageRepository {
 
   }
 
-  public Mono<ResponsePublisher<GetObjectResponse>> getByFileKey(String fileKey) {
-    log.info("Getting song by fileKey '{}' from bucket '{}'", fileKey, properties.getBucketName());
+  public Mono<ResponsePublisher<GetObjectResponse>> getByKey(String key, String bucket) {
+    log.info("Getting song by key '{}' from bucket '{}'", key, bucket);
     GetObjectRequest request = GetObjectRequest.builder()
-        .bucket(properties.getBucketName())
-        .key(fileKey)
+        .bucket(bucket)
+        .key(key)
         .build();
     return Mono.fromFuture(s3Client.getObject(request, AsyncResponseTransformer.toPublisher()))
-        .map(response -> {
-          log.debug("Getting song file result '{}' from bucket '{}'", response, properties.getBucketName());
-          checkResult(response.response());
-          return response;
+        .flatMap(response -> {
+          log.debug("Getting song file result '{}' from bucket '{}'", response, bucket);
+          return checkResult(response.response()).thenReturn(response);
         });
   }
 
-  public Mono<Void> deleteByFileKey(String fileKey) {
-    log.info("Deleting a song file by key '{}' from bucket '{}'", fileKey, properties.getBucketName());
+  public Mono<Void> deleteByKey(String key, String bucket) {
+    log.info("Deleting a song file by key '{}' from bucket '{}'", key, bucket);
     DeleteObjectRequest request = DeleteObjectRequest.builder()
-        .bucket(properties.getBucketName())
-        .key(fileKey)
+        .bucket(bucket)
+        .key(key)
         .build();
 
     return Mono.fromFuture(s3Client.deleteObject(request)).flatMap(response -> {
-      log.debug("Song file deletion result {} from bucket {}", response, properties.getBucketName());
+      log.debug("Song file deletion result {} from bucket {}", response, bucket);
       return checkResult(response);
     });
+  }
+  public Mono<String> move(String key, StorageDTO fromStorage, StorageDTO toStorage) {
+    log.info("Moving a resource file with key='{}' from source '{}' to destination '{}'", key, fromStorage, toStorage);
+    final String destinationKey = replaceKeyPath(key, fromStorage.getPath(), toStorage.getPath());
+
+    final CopyObjectRequest copyObjectRequest = CopyObjectRequest.builder()
+        .sourceBucket(fromStorage.getBucket())
+        .sourceKey(key)
+        .destinationBucket(toStorage.getBucket())
+        .destinationKey(destinationKey)
+        .build();
+
+    return Mono.fromFuture(s3Client.copyObject(copyObjectRequest))
+        .flatMap(response -> {
+          log.debug("Copy file result {} from bucket '{}' to bucket '{}'", response, fromStorage.getBucket(),
+              toStorage.getBucket());
+          return checkResult(response);
+        })
+        .flatMap(result -> deleteByKey(key, fromStorage.getBucket()))
+        .thenReturn(destinationKey);
+  }
+
+  private String replaceKeyPath(String key, String originalPath, String newPath) {
+    return key.replaceFirst(originalPath, newPath);
   }
 
   private Mono<Void> checkResult(SdkResponse response) {

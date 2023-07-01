@@ -23,7 +23,6 @@ public class KafkaExtension implements BeforeAllCallback, AfterAllCallback {
     public void beforeAll(ExtensionContext context) {
         container = new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:5.4.3"));
         container.start();
-
-        System.setProperty("spring.kafka.producer.bootstrap-servers", container.getBootstrapServers());
+        System.setProperty("KAFKA_BOOTSTRAP_SERVERS_ENDPOINTS", container.getBootstrapServers());
     }
 }

@@ -1,8 +1,8 @@
 package com.epam.training.microservicefoundation.resourceservice.api;
 
-import com.epam.training.microservicefoundation.resourceservice.model.ResourceRecord;
+import com.epam.training.microservicefoundation.resourceservice.model.ResourceDTO;
+import com.epam.training.microservicefoundation.resourceservice.model.ResourceStagedEvent;
 import com.epam.training.microservicefoundation.resourceservice.service.ResourceService;
-import com.epam.training.microservicefoundation.resourceservice.service.implementation.KafkaManager;
 import java.net.URI;
 import java.nio.ByteBuffer;
 import java.util.Map;
@@ -38,7 +38,7 @@ public class ResourceHandler {
 
     return ServerResponse.created(URI.create(request.path()))
         .contentType(MediaType.APPLICATION_JSON)
-        .body(service.save(filePart), ResourceRecord.class);
+        .body(service.save(filePart), ResourceDTO.class);
   }
 
   public Mono<ServerResponse> deleteByIds(ServerRequest request) {
@@ -50,7 +50,7 @@ public class ResourceHandler {
 
     return ServerResponse.ok()
         .contentType(MediaType.APPLICATION_JSON)
-        .body(service.deleteByIds(idsFlux), ResourceRecord.class);
+        .body(service.deleteByIds(idsFlux), ResourceStagedEvent.class);
   }
 
   public Mono<ServerResponse> getById(ServerRequest request) {

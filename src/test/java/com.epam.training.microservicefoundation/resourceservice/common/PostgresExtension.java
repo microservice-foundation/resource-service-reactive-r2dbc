@@ -1,4 +1,4 @@
-package com.epam.training.microservicefoundation.resourceservice.repository;
+package com.epam.training.microservicefoundation.resourceservice.common;
 
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
@@ -20,15 +20,10 @@ public final class PostgresExtension implements BeforeAllCallback, AfterAllCallb
     database = new PostgreSQLContainer<>("postgres:12.9-alpine");
     database.start();
 
-    System.setProperty("spring.r2dbc.url", r2dbcUrl(database));
-    System.setProperty("spring.r2dbc.username", database.getUsername());
-    System.setProperty("spring.r2dbc.password", database.getPassword());
-  }
-
-  private String r2dbcUrl(PostgreSQLContainer<?> database) {
-    return String.format("r2dbc:postgresql://%s:%s/%s",
-        database.getHost(),
-        database.getFirstMappedPort(),
-        database.getDatabaseName());
+    System.setProperty("POSTGRES_HOST", database.getHost());
+    System.setProperty("POSTGRES_PORT", String.valueOf(database.getFirstMappedPort()));
+    System.setProperty("DATABASE_NAME", database.getDatabaseName());
+    System.setProperty("POSTGRES_USERNAME", database.getUsername());
+    System.setProperty("POSTGRES_PASSWORD", database.getPassword());
   }
 }

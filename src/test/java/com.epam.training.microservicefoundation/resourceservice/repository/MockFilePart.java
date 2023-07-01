@@ -15,7 +15,7 @@ import java.io.InputStream;
 import java.nio.ByteBuffer;
 import reactor.core.publisher.Mono;
 
-public class MockFilePart implements FilePart {
+public final class MockFilePart implements FilePart {
 
   private final String filename;
   private final byte[] content;
