@@ -28,7 +28,7 @@ public class ClientConfiguration {
         .responseTimeout(Duration.ofMillis(properties.getResponseTimeout()))
         .doOnConnected(connection -> connection
             .addHandlerFirst(new ReadTimeoutHandler(properties.getReadTimeout(), TimeUnit.MILLISECONDS))
-            .addHandlerLast(new WriteTimeoutHandler(properties.getReadTimeout(), TimeUnit.MILLISECONDS)));
+            .addHandlerLast(new WriteTimeoutHandler(properties.getWriteTimeout(), TimeUnit.MILLISECONDS)));
   }
 
   @Bean
