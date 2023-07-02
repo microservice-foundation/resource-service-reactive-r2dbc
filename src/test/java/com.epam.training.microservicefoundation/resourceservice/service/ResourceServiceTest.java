@@ -64,7 +64,7 @@ class ResourceServiceTest {
   @Mock
   private ResourceMapper mapper;
   @Mock
-  private KafkaProducer kafkaManager;
+  private KafkaProducer kafkaProducer;
   @Mock
   private StorageManager storageManager;
   @InjectMocks
@@ -90,7 +90,7 @@ class ResourceServiceTest {
     when(resourceRepository.save(any())).thenReturn(Mono.just(Resource.builder().name(filePart.filename()).key(fileKey)
         .status(ResourceStatus.STAGED).id(id).build()));
     when(mapper.mapToRecord(any())).thenReturn(new ResourceDTO(id));
-    when(kafkaManager.publish(any())).thenReturn(Mono.just(new FakeSenderResult<>(null, null, null)));
+    when(kafkaProducer.publish(any())).thenReturn(Mono.just(new FakeSenderResult<>(null, null, null)));
 
     Mono<ResourceDTO> resourceRecordMono = service.save(Mono.just(filePart));
 
@@ -177,7 +177,7 @@ class ResourceServiceTest {
         .withKey(fileKey)));
     when(resourceRepository.save(any())).thenReturn(Mono.just(Resource.builder().name(filePart.filename()).key(fileKey)
         .status(ResourceStatus.STAGED).id(id).build()));
-    when(kafkaManager.publish(any())).thenThrow(IllegalStateException.class);
+    when(kafkaProducer.publish(any())).thenThrow(IllegalStateException.class);
 
     Mono<ResourceDTO> resourceRecordMono = service.save(Mono.just(filePart));
 
@@ -520,7 +520,7 @@ class ResourceServiceTest {
     return new MockFilePart(FILENAME, Files.readAllBytes(FILE_PATH), headers);
   }
 
-  static class FakeSenderResult<T> implements SenderResult<T> {
+  private static class FakeSenderResult<T> implements SenderResult<T> {
     private final RecordMetadata recordMetadata;
     private final Exception exception;
     private final T correlationMetadata;

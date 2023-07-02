@@ -1,4 +1,4 @@
-package com.epam.training.microservicefoundation.resourceservice.service.kafka;
+package com.epam.training.microservicefoundation.resourceservice.kafka;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;

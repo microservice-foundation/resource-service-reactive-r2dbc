@@ -1,4 +1,4 @@
-package com.epam.training.microservicefoundation.resourceservice.service.kafka;
+package com.epam.training.microservicefoundation.resourceservice.kafka;
 
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
