@@ -67,6 +67,7 @@ public class ResourceServiceImpl implements ResourceService {
   }
 
   private Mono<ResourceStagingContext> refuseIfResourceExistsByName(ResourceStagingContext context) {
+    log.info("Check whether resource is existent by name '{}'", context.getFilePart().filename());
     return resourceRepository.existsByName(context.getFilePart().filename())
         .filter(result -> Boolean.FALSE.equals(result) || !StringUtils.hasLength(context.getFilePart().filename()))
         .map(result -> context);
@@ -74,11 +75,13 @@ public class ResourceServiceImpl implements ResourceService {
 
   private Mono<ResourceStagingContext> uploadResourceFile(ResourceStagingContext context) {
     final ResourceFile resourceFile = new ResourceFile(context.getFilePart(), context.getStorage());
+    log.info("Upload resource file : {}", resourceFile);
     return storageRepository.upload(resourceFile)
         .map(result -> context.withResource(Resource.builder().key(result.getKey()).name(result.getFilename()).build()));
   }
 
   private Mono<ResourceStagingContext> publishResourceStagingEvent(ResourceStagingContext context) {
+    log.info("Publish resource staged event for resource id '{}'", context.getResource().getId());
     return kafkaProducer.publish(new ResourceStagedEvent(context.getResource().getId())).thenReturn(context);
   }
 
@@ -88,6 +91,7 @@ public class ResourceServiceImpl implements ResourceService {
         .storageId(context.getStorage().getId())
         .build();
 
+    log.info("Save staged resource: {}", resource);
     return resourceRepository.save(resource)
         .map(context::withResource)
         .onErrorMap(DataIntegrityViolationException.class, e -> new IllegalArgumentException(String.format(
@@ -136,6 +140,7 @@ public class ResourceServiceImpl implements ResourceService {
   }
 
   private Mono<ResourcePermanentContext> moveToPermanentStorage(ResourcePermanentContext context) {
+    log.info("Move resource to permanent storage");
     return storageRepository.move(context.getResource().getKey(), context.getSourceStorage(), context.getDestinationStorage())
         .map(key -> context.withResource(context.getResource().toBuilder().key(key).build()));
   }
