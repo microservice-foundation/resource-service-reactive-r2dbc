@@ -1,5 +1,6 @@
 package com.epam.training.microservicefoundation.resourceservice.config;
 
+import com.epam.training.microservicefoundation.resourceservice.config.properties.S3ClientConfigurationProperties;
 import com.epam.training.microservicefoundation.resourceservice.repository.CloudStorageRepository;
 import java.time.Duration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;

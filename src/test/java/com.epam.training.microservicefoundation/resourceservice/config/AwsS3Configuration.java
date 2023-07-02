@@ -1,7 +1,9 @@
 package com.epam.training.microservicefoundation.resourceservice.config;
 
+import com.epam.training.microservicefoundation.resourceservice.config.properties.S3ClientConfigurationProperties;
 import com.epam.training.microservicefoundation.resourceservice.repository.CloudStorageRepository;
 import java.time.Duration;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
@@ -20,6 +22,10 @@ import software.amazon.awssdk.services.s3.S3Configuration;
 @EnableConfigurationProperties(value = S3ClientConfigurationProperties.class)
 public class AwsS3Configuration {
 
+  @Value("${aws.s3.access-key}")
+  private String accessKey;
+  @Value("${aws.s3.secret-key}")
+  private String secretKey;
   @Bean
   public CloudStorageRepository cloudStorageRepository(S3ClientConfigurationProperties properties) {
     return new CloudStorageRepository(properties, s3Client(properties));
@@ -38,7 +44,7 @@ public class AwsS3Configuration {
 
     return S3AsyncClient.builder()
         .httpClient(httpClient)
-        .credentialsProvider(getStaticCredentialsProvider(properties))
+        .credentialsProvider(getStaticCredentialsProvider())
         .region(properties.getRegion())
         .endpointOverride(properties.getEndpoint())
         .serviceConfiguration(serviceConfiguration)
@@ -46,8 +52,8 @@ public class AwsS3Configuration {
         .build();
   }
 
-  private StaticCredentialsProvider getStaticCredentialsProvider(S3ClientConfigurationProperties properties) {
-    return StaticCredentialsProvider.create(getAwsBasicCredentials(properties));
+  private StaticCredentialsProvider getStaticCredentialsProvider() {
+    return StaticCredentialsProvider.create(getAwsBasicCredentials());
   }
 
   private ClientOverrideConfiguration clientOverrideConfiguration(S3ClientConfigurationProperties properties) {
@@ -64,7 +70,7 @@ public class AwsS3Configuration {
         .build();
   }
 
-  private AwsBasicCredentials getAwsBasicCredentials(S3ClientConfigurationProperties properties) {
-    return AwsBasicCredentials.create(properties.getAccessKey(), properties.getSecretKey());
+  private AwsBasicCredentials getAwsBasicCredentials() {
+    return AwsBasicCredentials.create(accessKey, secretKey);
   }
 }

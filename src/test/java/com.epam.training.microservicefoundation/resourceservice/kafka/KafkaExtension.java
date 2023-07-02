@@ -1,4 +1,4 @@
-package com.epam.training.microservicefoundation.resourceservice.service.kafka;
+package com.epam.training.microservicefoundation.resourceservice.kafka;
 
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
@@ -23,7 +23,6 @@ public class KafkaExtension implements BeforeAllCallback, AfterAllCallback {
     public void beforeAll(ExtensionContext context) {
         container = new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:5.4.3"));
         container.start();
-
-        System.setProperty("spring.kafka.producer.bootstrap-servers", container.getBootstrapServers());
+        System.setProperty("KAFKA_BOOTSTRAP_SERVERS_ENDPOINTS", container.getBootstrapServers());
     }
 }

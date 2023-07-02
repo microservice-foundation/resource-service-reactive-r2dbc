@@ -21,7 +21,7 @@ public class DatasourceConfiguration {
 
     CompositeDatabasePopulator populator = new CompositeDatabasePopulator();
     populator.addPopulators(new ResourceDatabasePopulator(new ClassPathResource("db/schema.sql")));
-    populator.addPopulators(new ResourceDatabasePopulator(new ClassPathResource("db/data.sql")));
+//    populator.addPopulators(new ResourceDatabasePopulator(new ClassPathResource("db/data.sql")));
     initializer.setDatabasePopulator(populator);
     return initializer;
   }

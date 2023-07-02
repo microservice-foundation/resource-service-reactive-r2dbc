@@ -29,6 +29,8 @@ dependencies {
     implementation 'io.projectreactor.kafka:reactor-kafka:1.3.17'
     implementation 'software.amazon.awssdk:netty-nio-client'
     implementation 'software.amazon.awssdk:core:2.20.65'
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'io.projectreactor:reactor-test'
     testImplementation 'org.testcontainers:postgresql'
@@ -39,6 +41,8 @@ dependencies {
     testImplementation 'org.springframework.kafka:spring-kafka-test'
     testImplementation 'org.testcontainers:kafka'
     testImplementation 'io.rest-assured:spring-web-test-client:5.3.0'
+    testImplementation 'com.squareup.okhttp3:okhttp:4.10.0'
+    testImplementation 'com.squareup.okhttp3:mockwebserver:4.10.0'
 }
 
 dependencyManagement {

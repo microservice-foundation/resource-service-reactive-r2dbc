@@ -3,18 +3,11 @@ package com.epam.training.microservicefoundation.resourceservice.config;
 import com.epam.training.microservicefoundation.resourceservice.api.ResourceExceptionHandler;
 import com.epam.training.microservicefoundation.resourceservice.api.ResourceHandler;
 import com.epam.training.microservicefoundation.resourceservice.api.ResourceRouter;
-import com.epam.training.microservicefoundation.resourceservice.model.Mapper;
-import com.epam.training.microservicefoundation.resourceservice.model.Resource;
-import com.epam.training.microservicefoundation.resourceservice.model.ResourceRecord;
-import com.epam.training.microservicefoundation.resourceservice.repository.CloudStorageRepository;
-import com.epam.training.microservicefoundation.resourceservice.repository.ResourceRepository;
-import com.epam.training.microservicefoundation.resourceservice.service.ResourceService;
-import com.epam.training.microservicefoundation.resourceservice.service.implementation.KafkaManager;
-import com.epam.training.microservicefoundation.resourceservice.service.implementation.ResourceServiceImpl;
 import org.springframework.boot.autoconfigure.web.WebProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.web.reactive.error.DefaultErrorAttributes;
+import org.springframework.cloud.config.client.RetryProperties;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
@@ -29,7 +22,7 @@ import org.springframework.web.reactive.config.WebFluxConfigurer;
 @TestConfiguration
 @EnableWebFlux
 @Import(value = {ResourceRouter.class, ResourceHandler.class})
-@EnableConfigurationProperties(WebProperties.class)
+@EnableConfigurationProperties({WebProperties.class, RetryProperties.class})
 public class WebFluxConfiguration implements WebFluxConfigurer {
 
   // @Order(Ordered.HIGHEST_PRECEDENCE) on ExceptionHandler class in Spring is used to define the order in which multiple exception handler classes get executed.
@@ -68,12 +61,5 @@ public class WebFluxConfiguration implements WebFluxConfigurer {
         non-file parts are rejected with DataBufferLimitException.
         */
     configurer.defaultCodecs().maxInMemorySize(512 * 1024);
-  }
-
-  @Bean
-  public ResourceService service(CloudStorageRepository cloudStorageRepository, ResourceRepository resourceRepository,
-      Mapper<Resource, ResourceRecord> mapper, KafkaManager kafkaManager) {
-
-    return new ResourceServiceImpl(resourceRepository, cloudStorageRepository, mapper, kafkaManager);
   }
 }

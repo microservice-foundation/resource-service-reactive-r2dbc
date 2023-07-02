@@ -3,12 +3,12 @@ package com.epam.training.microservicefoundation.resourceservice.model;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ResourceMapper implements Mapper<Resource, ResourceRecord> {
+public class ResourceMapper implements Mapper<Resource, ResourceDTO> {
 
     @Override
-    public ResourceRecord mapToRecord(Resource resource) {
+    public ResourceDTO mapToRecord(Resource resource) {
         if(resource == null)
             return null;
-        return new ResourceRecord(resource.getId());
+        return new ResourceDTO(resource.getId());
     }
 }
