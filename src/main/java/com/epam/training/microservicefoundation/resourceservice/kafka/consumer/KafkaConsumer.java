@@ -1,9 +1,10 @@
 package com.epam.training.microservicefoundation.resourceservice.kafka.consumer;
 
+import com.epam.training.microservicefoundation.resourceservice.model.ResourceProcessedEvent;
 import com.epam.training.microservicefoundation.resourceservice.model.exception.ReceiverRecordException;
 import com.epam.training.microservicefoundation.resourceservice.service.ReactiveKafkaEventListener;
+import com.epam.training.microservicefoundation.resourceservice.service.implementation.ResourceProcessedEventListener;
 import java.time.Duration;
-import java.util.List;
 import java.util.function.Function;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,19 +22,19 @@ public class KafkaConsumer {
   private static final Logger log = LoggerFactory.getLogger(KafkaConsumer.class);
   private final DeadLetterPublishingRecoverer deadLetterPublishingRecoverer;
   private final RetryProperties retryProperties;
-  private final List<Pair<ReactiveKafkaConsumerTemplate<String, Object>, ReactiveKafkaEventListener<Object>>> consumerAndListener;
+  private final Pair<ReactiveKafkaConsumerTemplate<String, ResourceProcessedEvent>, ResourceProcessedEventListener>
+      resourceProcessedEventListener;
 
   public KafkaConsumer(DeadLetterPublishingRecoverer deadLetterPublishingRecoverer, RetryProperties retryProperties,
-      List<Pair<ReactiveKafkaConsumerTemplate<String, Object>, ReactiveKafkaEventListener<Object>>> consumerAndListener) {
-
-    this.consumerAndListener = consumerAndListener;
+      Pair<ReactiveKafkaConsumerTemplate<String, ResourceProcessedEvent>, ResourceProcessedEventListener> resourceProcessedEventListener) {
+    this.resourceProcessedEventListener = resourceProcessedEventListener;
     this.deadLetterPublishingRecoverer = deadLetterPublishingRecoverer;
     this.retryProperties = retryProperties;
   }
 
   @EventListener(ApplicationStartedEvent.class)
   public void subscribe() {
-    consumerAndListener.forEach(pair -> listen(pair.getFirst(), pair.getSecond()));
+    listen(resourceProcessedEventListener.getFirst(), resourceProcessedEventListener.getSecond());
   }
 
   private <T> void listen(ReactiveKafkaConsumerTemplate<String, T> consumerTemplate, ReactiveKafkaEventListener<T> eventListener) {

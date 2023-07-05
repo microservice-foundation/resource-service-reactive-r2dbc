@@ -31,11 +31,8 @@ public class TopicConfiguration {
   @Bean
   Map<Class<?>, Pair<String, Function<Object, ProducerRecord<String, Object>>>> publicationTopics(TopicProperties properties) {
     Map<Class<?>, Pair<String, Function<Object, ProducerRecord<String, Object>>>> map = new HashMap<>();
-
-    map.put(ResourceStagedEvent.class,
-        Pair.of(properties.getResourceStaging(), message -> new ProducerRecord<>(properties.getResourceStaging(),
-            String.valueOf(((ResourceStagedEvent) message).getId()), message)));
-
+    map.put(ResourceStagedEvent.class, Pair.of(properties.getResourceStaging(), message ->
+        new ProducerRecord<>(properties.getResourceStaging(), String.valueOf(((ResourceStagedEvent) message).getId()), message)));
     return map;
   }
 }

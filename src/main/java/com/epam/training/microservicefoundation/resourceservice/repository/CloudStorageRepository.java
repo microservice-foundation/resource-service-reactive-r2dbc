@@ -226,7 +226,7 @@ public class CloudStorageRepository {
               toStorage.getBucket());
           return checkResult(response);
         })
-        .flatMap(result -> deleteByKey(key, fromStorage.getBucket()))
+        .doOnSuccess(v -> deleteByKey(key, fromStorage.getBucket()))
         .thenReturn(destinationKey);
   }
 

@@ -4,11 +4,9 @@ import com.epam.training.microservicefoundation.resourceservice.config.propertie
 import com.epam.training.microservicefoundation.resourceservice.kafka.consumer.KafkaConsumer;
 import com.epam.training.microservicefoundation.resourceservice.kafka.producer.KafkaProducer;
 import com.epam.training.microservicefoundation.resourceservice.model.ResourceProcessedEvent;
-import com.epam.training.microservicefoundation.resourceservice.service.ReactiveKafkaEventListener;
 import com.epam.training.microservicefoundation.resourceservice.service.ResourceService;
 import com.epam.training.microservicefoundation.resourceservice.service.implementation.ResourceProcessedEventListener;
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -45,20 +43,10 @@ public class KafkaConfiguration {
   }
 
   @Bean
-  public KafkaConsumer kafkaConsumer(
-      List<Pair<ReactiveKafkaConsumerTemplate<String, Object>, ReactiveKafkaEventListener<Object>>> consumerAndListeners,
-      DeadLetterPublishingRecoverer deadLetterPublishingRecoverer, RetryProperties retryProperties) {
-    return new KafkaConsumer(deadLetterPublishingRecoverer, retryProperties, consumerAndListeners);
-  }
-
-  @Bean
-  public List<Pair<ReactiveKafkaConsumerTemplate<String, ?>, ReactiveKafkaEventListener<?>>> consumerAndListeners(
+  public KafkaConsumer kafkaConsumer(DeadLetterPublishingRecoverer deadLetterPublishingRecoverer, RetryProperties retryProperties,
       KafkaProperties kafkaProperties, TopicProperties topicProperties, ResourceService resourceService) {
-    return List.of(Pair.of(resourcePermanentConsumer(kafkaProperties, topicProperties), resourceProcessedEventListener(resourceService)));
-  }
-
-  private ResourceProcessedEventListener resourceProcessedEventListener(ResourceService service) {
-    return new ResourceProcessedEventListener(service);
+    return new KafkaConsumer(deadLetterPublishingRecoverer, retryProperties, Pair.of(resourcePermanentConsumer(kafkaProperties,
+        topicProperties), new ResourceProcessedEventListener(resourceService)));
   }
 
   private ReactiveKafkaConsumerTemplate<String, ResourceProcessedEvent> resourcePermanentConsumer(KafkaProperties kafkaProperties,

@@ -29,13 +29,13 @@ public class StorageManager {
       return storageServiceClient.getByType(type)
           .collectList()
           .doOnNext(storages -> storageCache.put(type, storages))
-          .map(storages -> storageCache.get(type).get(randomElementIndex(storageCache.size())))
+          .map(storages -> storageCache.get(type).get(randomElementIndex(storageCache.get(type).size())))
           .onErrorMap(IndexOutOfBoundsException.class,
               error -> new StorageNotFoundException(String.format("Storage is not found by '%s' type", type), error))
           .onErrorMap(Exceptions::isRetryExhausted,
               error -> new IllegalStateException(String.format("Retry to gat storage by type '%s' is exhausted", type), error));
     }
-    return Mono.just(storageCache.get(type).get(randomElementIndex(storageCache.size())));
+    return Mono.just(storageCache.get(type).get(randomElementIndex(storageCache.get(type).size())));
   }
 
   private int randomElementIndex(int size) {
