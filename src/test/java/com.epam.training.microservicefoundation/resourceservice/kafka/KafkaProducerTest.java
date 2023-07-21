@@ -9,7 +9,7 @@ import com.epam.training.microservicefoundation.resourceservice.config.KafkaConf
 import com.epam.training.microservicefoundation.resourceservice.config.TopicConfiguration;
 import com.epam.training.microservicefoundation.resourceservice.config.properties.TopicProperties;
 import com.epam.training.microservicefoundation.resourceservice.kafka.producer.KafkaProducer;
-import com.epam.training.microservicefoundation.resourceservice.model.ResourceStagedEvent;
+import com.epam.training.microservicefoundation.resourceservice.model.event.ResourceStagedEvent;
 import java.time.Duration;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

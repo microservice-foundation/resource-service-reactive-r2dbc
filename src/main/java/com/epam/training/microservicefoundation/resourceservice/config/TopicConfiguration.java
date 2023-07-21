@@ -1,7 +1,7 @@
 package com.epam.training.microservicefoundation.resourceservice.config;
 
 import com.epam.training.microservicefoundation.resourceservice.config.properties.TopicProperties;
-import com.epam.training.microservicefoundation.resourceservice.model.ResourceStagedEvent;
+import com.epam.training.microservicefoundation.resourceservice.model.event.ResourceStagedEvent;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;

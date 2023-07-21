@@ -3,8 +3,8 @@ package com.epam.training.microservicefoundation.resourceservice.client;
 import com.epam.training.microservicefoundation.resourceservice.client.Server.Service;
 import com.epam.training.microservicefoundation.resourceservice.config.ClientConfiguration;
 import com.epam.training.microservicefoundation.resourceservice.config.properties.WebClientProperties;
-import com.epam.training.microservicefoundation.resourceservice.model.StorageDTO;
-import com.epam.training.microservicefoundation.resourceservice.model.StorageType;
+import com.epam.training.microservicefoundation.resourceservice.model.dto.GetStorageDTO;
+import com.epam.training.microservicefoundation.resourceservice.model.dto.StorageType;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
@@ -33,9 +33,9 @@ class StorageServiceClientTest {
 
   @Test
   void shouldGetStagingStorage(@Server(service = Service.STORAGE) MockServer storageServer) {
-    StorageDTO storage1 = storage(StorageType.STAGING);
-    StorageDTO storage2 = storage(StorageType.STAGING);
-    List<StorageDTO> storages = List.of(storage1, storage2);
+    GetStorageDTO storage1 = storage(StorageType.STAGING);
+    GetStorageDTO storage2 = storage(StorageType.STAGING);
+    List<GetStorageDTO> storages = List.of(storage1, storage2);
     storageServer.response(HttpStatus.OK, storages, Collections.singletonMap(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE));
 
     StepVerifier.create(client.getByType(StorageType.STAGING))
@@ -45,10 +45,10 @@ class StorageServiceClientTest {
 
   @Test
   void shouldGetStagingStorageAfterRetries(@Server(service = Service.STORAGE) MockServer storageServer) {
-    StorageDTO storage1 = storage(StorageType.STAGING);
-    StorageDTO storage2 = storage(StorageType.STAGING);
+    GetStorageDTO storage1 = storage(StorageType.STAGING);
+    GetStorageDTO storage2 = storage(StorageType.STAGING);
 
-    List<StorageDTO> storages = List.of(storage1, storage2);
+    List<GetStorageDTO> storages = List.of(storage1, storage2);
     storageServer.response(HttpStatus.SERVICE_UNAVAILABLE);
     storageServer.response(HttpStatus.NOT_FOUND);
     storageServer.response(HttpStatus.OK, storages, Collections.singletonMap(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE));
@@ -60,9 +60,9 @@ class StorageServiceClientTest {
 
   @Test
   void shouldGetPermanentStorage(@Server(service = Service.STORAGE) MockServer storageServer) {
-    StorageDTO storage1 = storage(StorageType.PERMANENT);
-    StorageDTO storage2 = storage(StorageType.PERMANENT);
-    List<StorageDTO> storages = List.of(storage1, storage2);
+    GetStorageDTO storage1 = storage(StorageType.PERMANENT);
+    GetStorageDTO storage2 = storage(StorageType.PERMANENT);
+    List<GetStorageDTO> storages = List.of(storage1, storage2);
     storageServer.response(HttpStatus.OK, storages, Collections.singletonMap(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE));
 
     StepVerifier.create(client.getByType(StorageType.PERMANENT))
@@ -72,12 +72,12 @@ class StorageServiceClientTest {
 
   @Test
   void shouldGetPermanentStorageAfterRetries(@Server(service = Service.STORAGE) MockServer storageServer) {
-    StorageDTO storage1 = storage(StorageType.PERMANENT);
-    StorageDTO storage2 = storage(StorageType.PERMANENT);
+    GetStorageDTO storage1 = storage(StorageType.PERMANENT);
+    GetStorageDTO storage2 = storage(StorageType.PERMANENT);
 
     storageServer.response(HttpStatus.NOT_FOUND);
     storageServer.response(HttpStatus.SERVICE_UNAVAILABLE);
-    List<StorageDTO> storages = List.of(storage1, storage2);
+    List<GetStorageDTO> storages = List.of(storage1, storage2);
     storageServer.response(HttpStatus.OK, storages, Collections.singletonMap(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE));
 
     StepVerifier.create(client.getByType(StorageType.PERMANENT))
@@ -97,13 +97,13 @@ class StorageServiceClientTest {
 
   @Test
   void shouldGetById(@Server(service = Service.STORAGE) MockServer storageServer) {
-    StorageDTO storage1 = storage(StorageType.PERMANENT);
+    GetStorageDTO storage1 = storage(StorageType.PERMANENT);
     storageServer.response(HttpStatus.OK, storage1, Collections.singletonMap(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE));
     StepVerifier.create(client.getById(storage1.getId()))
         .expectNext(storage1)
         .verifyComplete();
 
-    StorageDTO storage2 = storage(StorageType.STAGING);
+    GetStorageDTO storage2 = storage(StorageType.STAGING);
     storageServer.response(HttpStatus.OK, storage2, Collections.singletonMap(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE));
     StepVerifier.create(client.getById(storage2.getId()))
         .expectNext(storage2)
@@ -114,7 +114,7 @@ class StorageServiceClientTest {
   void shouldGetByIdAfterRetries(@Server(service = Service.STORAGE) MockServer storageServer) {
     storageServer.response(HttpStatus.INTERNAL_SERVER_ERROR);
     storageServer.response(HttpStatus.NOT_FOUND);
-    StorageDTO storage1 = storage(StorageType.PERMANENT);
+    GetStorageDTO storage1 = storage(StorageType.PERMANENT);
     storageServer.response(HttpStatus.OK, storage1, Collections.singletonMap(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE));
     StepVerifier.create(client.getById(storage1.getId()))
         .expectNext(storage1)
@@ -122,7 +122,7 @@ class StorageServiceClientTest {
 
     storageServer.response(HttpStatus.SERVICE_UNAVAILABLE);
     storageServer.response(HttpStatus.NOT_FOUND);
-    StorageDTO storage2 = storage(StorageType.STAGING);
+    GetStorageDTO storage2 = storage(StorageType.STAGING);
     storageServer.response(HttpStatus.OK, storage2, Collections.singletonMap(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE));
     StepVerifier.create(client.getById(storage2.getId()))
         .expectNext(storage2)
@@ -139,9 +139,8 @@ class StorageServiceClientTest {
         .verify();
   }
 
-  private StorageDTO storage(StorageType type) {
+  private GetStorageDTO storage(StorageType type) {
     int id = new Random().nextInt(10000);
-    return StorageDTO.builder().id(id).path("files/").bucket(type.name().toLowerCase() + "-bucket" + id)
-        .type(type).build();
+    return new GetStorageDTO(id, type.name().toLowerCase() + "-bucket" + id, "files/", type);
   }
 }

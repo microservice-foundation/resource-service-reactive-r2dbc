@@ -4,10 +4,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 import com.epam.training.microservicefoundation.resourceservice.client.StorageServiceClient;
-import com.epam.training.microservicefoundation.resourceservice.model.StorageDTO;
-import com.epam.training.microservicefoundation.resourceservice.model.StorageType;
-import com.epam.training.microservicefoundation.resourceservice.model.exception.StorageNotFoundException;
+import com.epam.training.microservicefoundation.resourceservice.model.dto.GetStorageDTO;
+import com.epam.training.microservicefoundation.resourceservice.model.dto.StorageType;
+import com.epam.training.microservicefoundation.resourceservice.model.exception.EntityNotFoundException;
 import com.epam.training.microservicefoundation.resourceservice.service.implementation.StorageManager;
+import java.util.Random;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -29,7 +30,7 @@ class StorageManagerTest {
   @ParameterizedTest
   @EnumSource(StorageType.class)
   void shouldGetStorageByType(StorageType type) {
-    final StorageDTO storage = storage(type);
+    final GetStorageDTO storage = storage(type);
     when(storageServiceClient.getByType(type)).thenReturn(Flux.just(storage));
     assertStorage(storage, storageManager.getByType(type));
   }
@@ -39,7 +40,7 @@ class StorageManagerTest {
   void shouldReturnStorageNotFoundExceptionWhenGetStorageByType(StorageType type) {
     when(storageServiceClient.getByType(type)).thenReturn(Flux.empty());
     StepVerifier.create(storageManager.getByType(type))
-        .expectError(StorageNotFoundException.class)
+        .expectError(EntityNotFoundException.class)
         .verify();
   }
 
@@ -47,7 +48,7 @@ class StorageManagerTest {
   @EnumSource(StorageType.class)
   void shouldGetById(StorageType type) {
     final long id = 123L;
-    StorageDTO storage = storage(type);
+    GetStorageDTO storage = storage(type);
     when(storageServiceClient.getById(id)).thenReturn(Mono.just(storage));
     assertStorage(storage, storageManager.getById(id));
   }
@@ -62,13 +63,14 @@ class StorageManagerTest {
         .verifyComplete();
   }
 
-  private StorageDTO storage(StorageType type) {
-    final long id = 123L;
-    return StorageDTO.builder().id(id).type(type).bucket(type == StorageType.PERMANENT ? "permanent-bucket" : "staging-bucket").path(
-        "files/").build();
+  private final static Random RANDOM = new Random();
+
+  private GetStorageDTO storage(StorageType type) {
+    final long id = RANDOM.nextInt(1000);
+    return new GetStorageDTO(id, "test-bucket-" + id, "files/", type);
   }
 
-  private void assertStorage(StorageDTO expectValue, Mono<StorageDTO> actualValue) {
+  private void assertStorage(GetStorageDTO expectValue, Mono<GetStorageDTO> actualValue) {
     StepVerifier.create(actualValue)
         .assertNext(result -> {
           assertEquals(expectValue.getId(), result.getId());

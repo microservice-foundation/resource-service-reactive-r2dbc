@@ -1,7 +1,10 @@
 package com.epam.training.microservicefoundation.resourceservice.config;
 
 import com.epam.training.microservicefoundation.resourceservice.config.properties.TopicProperties;
-import com.epam.training.microservicefoundation.resourceservice.model.ResourceStagedEvent;
+import com.epam.training.microservicefoundation.resourceservice.model.event.ResourceStagedEvent;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Function;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -9,10 +12,6 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.util.Pair;
 import org.springframework.kafka.config.TopicBuilder;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.Function;
 
 @TestConfiguration
 @EnableConfigurationProperties(TopicProperties.class)

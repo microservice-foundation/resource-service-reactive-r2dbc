@@ -39,7 +39,7 @@ spring:
       properties:
         spring.json.trusted.packages: com.epam.training.microservicefoundation.resourceservice.model
         spring.json.use.type.headers: false
-        spring.json.value.default.type: com.epam.training.microservicefoundation.resourceservice.model.ResourceProcessedEvent
+        spring.json.value.default.type: com.epam.training.microservicefoundation.resourceservice.model.event.ResourceProcessedEvent
       retry:
         backoff:
           interval: 1000

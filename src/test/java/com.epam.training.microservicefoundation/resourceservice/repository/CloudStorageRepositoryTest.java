@@ -6,15 +6,17 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.epam.training.microservicefoundation.resourceservice.common.CloudStorageExtension;
+import com.epam.training.microservicefoundation.resourceservice.common.FakeFilePart;
 import com.epam.training.microservicefoundation.resourceservice.config.AwsS3Configuration;
 import com.epam.training.microservicefoundation.resourceservice.config.properties.S3ClientConfigurationProperties;
 import com.epam.training.microservicefoundation.resourceservice.model.ResourceFile;
-import com.epam.training.microservicefoundation.resourceservice.model.StorageDTO;
-import com.epam.training.microservicefoundation.resourceservice.model.StorageType;
+import com.epam.training.microservicefoundation.resourceservice.model.dto.GetStorageDTO;
+import com.epam.training.microservicefoundation.resourceservice.model.dto.StorageType;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Random;
 import java.util.UUID;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -60,12 +62,11 @@ class CloudStorageRepositoryTest {
   @ParameterizedTest
   @NullAndEmptySource
   void shouldUploadSongWithEmptyFilename(String filename) throws IOException {
-    Path path = Paths.get("src/test/resources/files/mpthreetest.mp3");
-    HttpHeaders headers = new HttpHeaders();
+    final Path path = Paths.get("src/test/resources/files/mpthreetest.mp3");
+    final HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-    FilePart filePart = new MockFilePart(filename, Files.readAllBytes(path), headers);
-    ResourceFile resourceFile = new ResourceFile(filePart,
-        StorageDTO.builder().bucket(stagingBucket).path("files/").type(StorageType.STAGING).build());
+    final FilePart filePart = new FakeFilePart(filename, Files.readAllBytes(path), headers);
+    final ResourceFile resourceFile = new ResourceFile(filePart, storage(StorageType.STAGING));
 
     assertResourceFile(resourceFile, repository.upload(resourceFile));
   }
@@ -153,8 +154,8 @@ class CloudStorageRepositoryTest {
 
   @Test
   void shouldMoveNonexistentResourceFileToPermanentStorage() {
-    StorageDTO sourceStorage = storage(StorageType.STAGING);
-    StorageDTO destinationStorage = storage(StorageType.PERMANENT);
+    GetStorageDTO sourceStorage = storage(StorageType.STAGING);
+    GetStorageDTO destinationStorage = storage(StorageType.PERMANENT);
     Mono<String> stringMono = repository.move(sourceStorage.getPath() + UUID.randomUUID(), sourceStorage, destinationStorage);
 
     StepVerifier.create(stringMono)
@@ -164,28 +165,28 @@ class CloudStorageRepositoryTest {
 
   @Test
   void shouldMoveResourceFileToNonexistentStorage() throws IOException {
+    final GetStorageDTO getStorageDTO = new GetStorageDTO(1L, "test", "test/", StorageType.STAGING);
     Mono<String> stringMono = repository.upload(resourceFile()).flatMap(result -> repository.move(result.getKey(), result.getStorage(),
-        StorageDTO.builder().bucket("test").path("test/").build()));
+        getStorageDTO));
 
     StepVerifier.create(stringMono)
         .expectError(NoSuchBucketException.class)
         .verify();
   }
 
-  private StorageDTO storage(StorageType type) {
-    return StorageDTO.builder()
-        .type(type)
-        .bucket(type == StorageType.PERMANENT ? permanentBucket : stagingBucket)
-        .path(type == StorageType.PERMANENT ? "permanent-files/" : "staging-files/")
-        .build();
+  private final Random random = new Random();
+  private GetStorageDTO storage(StorageType type) {
+    boolean isPermanent = type == StorageType.PERMANENT;
+    return new GetStorageDTO(random.nextInt(1000), isPermanent ? permanentBucket : stagingBucket,
+        isPermanent ? "permanent-files/" : "staging-files/", type);
   }
 
   private ResourceFile resourceFile() throws IOException {
-    Path path = Paths.get("src/test/resources/files/mpthreetest.mp3");
-    String fileName = "mpthreetest.mp3";
-    HttpHeaders headers = new HttpHeaders();
+    final Path path = Paths.get("src/test/resources/files/mpthreetest.mp3");
+    final String fileName = "mpthreetest.mp3";
+    final HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-    FilePart filePart = new MockFilePart(fileName, Files.readAllBytes(path), headers);
+    final FilePart filePart = new FakeFilePart(fileName, Files.readAllBytes(path), headers);
     return new ResourceFile(filePart, storage(StorageType.STAGING));
   }
 

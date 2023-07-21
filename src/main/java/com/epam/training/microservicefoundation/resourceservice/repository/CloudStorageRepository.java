@@ -2,12 +2,9 @@ package com.epam.training.microservicefoundation.resourceservice.repository;
 
 import com.epam.training.microservicefoundation.resourceservice.config.properties.S3ClientConfigurationProperties;
 import com.epam.training.microservicefoundation.resourceservice.model.ResourceFile;
-import com.epam.training.microservicefoundation.resourceservice.model.StorageDTO;
 import com.epam.training.microservicefoundation.resourceservice.model.UploadState;
-import com.epam.training.microservicefoundation.resourceservice.model.exception.CopyObjectFailedException;
-import com.epam.training.microservicefoundation.resourceservice.model.exception.DeleteFailedException;
-import com.epam.training.microservicefoundation.resourceservice.model.exception.DownloadFailedException;
-import com.epam.training.microservicefoundation.resourceservice.model.exception.UploadFailedException;
+import com.epam.training.microservicefoundation.resourceservice.model.dto.GetStorageDTO;
+import com.epam.training.microservicefoundation.resourceservice.model.exception.ExceptionSupplier;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.List;
@@ -15,7 +12,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Function;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,11 +31,9 @@ import software.amazon.awssdk.services.s3.model.CompleteMultipartUploadResponse;
 import software.amazon.awssdk.services.s3.model.CompletedMultipartUpload;
 import software.amazon.awssdk.services.s3.model.CompletedPart;
 import software.amazon.awssdk.services.s3.model.CopyObjectRequest;
-import software.amazon.awssdk.services.s3.model.CopyObjectResponse;
 import software.amazon.awssdk.services.s3.model.CreateMultipartUploadRequest;
 import software.amazon.awssdk.services.s3.model.CreateMultipartUploadResponse;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
-import software.amazon.awssdk.services.s3.model.DeleteObjectResponse;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 import software.amazon.awssdk.services.s3.model.UploadPartRequest;
@@ -50,18 +44,11 @@ public class CloudStorageRepository {
   private static final Logger log = LoggerFactory.getLogger(CloudStorageRepository.class);
   private final S3ClientConfigurationProperties properties;
   private final S3AsyncClient s3Client;
-  private final Map<Class<? extends SdkResponse>, Function<SdkResponse, Mono<Void>>> checkExceptions;
 
   @Autowired
   public CloudStorageRepository(S3ClientConfigurationProperties properties, S3AsyncClient s3Client) {
     this.properties = properties;
     this.s3Client = s3Client;
-
-    checkExceptions = new HashMap<>();
-    checkExceptions.put(DeleteObjectResponse.class, response -> Mono.error(new DeleteFailedException(response)));
-    checkExceptions.put(GetObjectResponse.class, response -> Mono.error(new DownloadFailedException(response)));
-    checkExceptions.put(CreateMultipartUploadResponse.class, response -> Mono.error(new UploadFailedException(response)));
-    checkExceptions.put(CopyObjectResponse.class, response -> Mono.error(new CopyObjectFailedException(response)));
   }
 
   public Mono<ResourceFile> upload(ResourceFile file) {
@@ -78,7 +65,7 @@ public class CloudStorageRepository {
     metadata.put("filename", filename);
 
     final MediaType mediaType = Objects.isNull(filePart.headers().getContentType()) ? MediaType.APPLICATION_OCTET_STREAM :
-       filePart.headers().getContentType();
+        filePart.headers().getContentType();
 
     final String key = file.getStorage().getPath() + rawKey;
     final String bucket = file.getStorage().getBucket();
@@ -140,13 +127,13 @@ public class CloudStorageRepository {
 
     return Mono
         .fromFuture(request)
-        .map(uploadPartResult -> {
-          checkResult(uploadPartResult);
+        .flatMap(uploadPartResult -> {
           log.debug("UploadPart complete: part={}, etag={}", partNumber, uploadPartResult.eTag());
-          return CompletedPart.builder()
-              .eTag(uploadPartResult.eTag())
-              .partNumber(partNumber)
-              .build();
+          return checkResult(uploadPartResult)
+              .thenReturn(CompletedPart.builder()
+                  .eTag(uploadPartResult.eTag())
+                  .partNumber(partNumber)
+                  .build());
         });
   }
 
@@ -209,7 +196,8 @@ public class CloudStorageRepository {
       return checkResult(response);
     });
   }
-  public Mono<String> move(String key, StorageDTO fromStorage, StorageDTO toStorage) {
+
+  public Mono<String> move(String key, GetStorageDTO fromStorage, GetStorageDTO toStorage) {
     log.info("Moving a resource file with key='{}' from source '{}' to destination '{}'", key, fromStorage, toStorage);
     final String destinationKey = replaceKeyPath(key, fromStorage.getPath(), toStorage.getPath());
 
@@ -239,6 +227,6 @@ public class CloudStorageRepository {
     if (sdkResponse != null && sdkResponse.isSuccessful()) {
       return Mono.empty();
     }
-    return checkExceptions.get(response.getClass()).apply(response);
+    return Mono.error(ExceptionSupplier.cloudStorageProcessFailed(response).get());
   }
 }

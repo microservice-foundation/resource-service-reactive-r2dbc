@@ -7,8 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.epam.training.microservicefoundation.resourceservice.common.PostgresExtension;
 import com.epam.training.microservicefoundation.resourceservice.config.DatasourceConfiguration;
-import com.epam.training.microservicefoundation.resourceservice.model.Resource;
-import com.epam.training.microservicefoundation.resourceservice.model.ResourceStatus;
+import com.epam.training.microservicefoundation.resourceservice.model.entity.Resource;
+import com.epam.training.microservicefoundation.resourceservice.model.entity.ResourceStatus;
 import java.util.Random;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;

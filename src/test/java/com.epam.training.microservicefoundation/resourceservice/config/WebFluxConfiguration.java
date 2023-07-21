@@ -1,8 +1,13 @@
 package com.epam.training.microservicefoundation.resourceservice.config;
 
-import com.epam.training.microservicefoundation.resourceservice.api.ResourceExceptionHandler;
-import com.epam.training.microservicefoundation.resourceservice.api.ResourceHandler;
-import com.epam.training.microservicefoundation.resourceservice.api.ResourceRouter;
+import com.epam.training.microservicefoundation.resourceservice.handler.ResourceExceptionHandler;
+import com.epam.training.microservicefoundation.resourceservice.handler.ResourceHandler;
+import com.epam.training.microservicefoundation.resourceservice.router.ResourceRouter;
+import com.epam.training.microservicefoundation.resourceservice.service.implementation.BaseResourceServiceImpl;
+import com.epam.training.microservicefoundation.resourceservice.service.implementation.PermanentResourceService;
+import com.epam.training.microservicefoundation.resourceservice.service.implementation.StageResourceService;
+import com.epam.training.microservicefoundation.resourceservice.validator.IdQueryParamValidator;
+import com.epam.training.microservicefoundation.resourceservice.validator.RequestQueryParamValidator;
 import org.springframework.boot.autoconfigure.web.WebProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.context.TestConfiguration;
@@ -21,7 +26,8 @@ import org.springframework.web.reactive.config.WebFluxConfigurer;
 
 @TestConfiguration
 @EnableWebFlux
-@Import(value = {ResourceRouter.class, ResourceHandler.class})
+@Import(value = {ResourceRouter.class, ResourceHandler.class, IdQueryParamValidator.class, BaseResourceServiceImpl.class,
+    StageResourceService.class, PermanentResourceService.class})
 @EnableConfigurationProperties({WebProperties.class, RetryProperties.class})
 public class WebFluxConfiguration implements WebFluxConfigurer {
 
@@ -61,5 +67,10 @@ public class WebFluxConfiguration implements WebFluxConfigurer {
         non-file parts are rejected with DataBufferLimitException.
         */
     configurer.defaultCodecs().maxInMemorySize(512 * 1024);
+  }
+
+  @Bean
+  public RequestQueryParamValidator requestQueryParamValidator(IdQueryParamValidator idQueryParamValidator) {
+    return new RequestQueryParamValidator(idQueryParamValidator);
   }
 }

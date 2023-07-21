@@ -1,6 +1,6 @@
 package com.epam.training.microservicefoundation.resourceservice.kafka.consumer;
 
-import com.epam.training.microservicefoundation.resourceservice.model.ResourceProcessedEvent;
+import com.epam.training.microservicefoundation.resourceservice.model.event.ResourceProcessedEvent;
 import com.epam.training.microservicefoundation.resourceservice.model.exception.ReceiverRecordException;
 import com.epam.training.microservicefoundation.resourceservice.service.ReactiveKafkaEventListener;
 import com.epam.training.microservicefoundation.resourceservice.service.implementation.ResourceProcessedEventListener;

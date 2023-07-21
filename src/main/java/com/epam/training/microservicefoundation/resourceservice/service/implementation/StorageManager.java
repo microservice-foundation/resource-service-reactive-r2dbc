@@ -1,9 +1,9 @@
 package com.epam.training.microservicefoundation.resourceservice.service.implementation;
 
 import com.epam.training.microservicefoundation.resourceservice.client.StorageServiceClient;
-import com.epam.training.microservicefoundation.resourceservice.model.StorageDTO;
-import com.epam.training.microservicefoundation.resourceservice.model.StorageType;
-import com.epam.training.microservicefoundation.resourceservice.model.exception.StorageNotFoundException;
+import com.epam.training.microservicefoundation.resourceservice.model.dto.GetStorageDTO;
+import com.epam.training.microservicefoundation.resourceservice.model.dto.StorageType;
+import com.epam.training.microservicefoundation.resourceservice.model.exception.ExceptionSupplier;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,7 +16,7 @@ import reactor.core.publisher.Mono;
 @Service
 public class StorageManager {
   private final StorageServiceClient storageServiceClient;
-  private final Map<StorageType, List<StorageDTO>> storageCache = new HashMap<>();
+  private final Map<StorageType, List<GetStorageDTO>> storageCache = new HashMap<>();
   private static final Random RANDOM = new Random();
 
   @Autowired
@@ -24,27 +24,24 @@ public class StorageManager {
     this.storageServiceClient = storageServiceClient;
   }
 
-  public Mono<StorageDTO> getByType(StorageType type) {
+  public Mono<GetStorageDTO> getByType(StorageType type) {
     if (!storageCache.containsKey(type)) {
       return storageServiceClient.getByType(type)
           .collectList()
           .doOnNext(storages -> storageCache.put(type, storages))
           .map(storages -> storageCache.get(type).get(randomElementIndex(storageCache.get(type).size())))
-          .onErrorMap(IndexOutOfBoundsException.class,
-              error -> new StorageNotFoundException(String.format("Storage is not found by '%s' type", type), error))
-          .onErrorMap(Exceptions::isRetryExhausted,
-              error -> new IllegalStateException(String.format("Retry to gat storage by type '%s' is exhausted", type), error));
+          .onErrorMap(IndexOutOfBoundsException.class, error -> ExceptionSupplier.entityNotFound(GetStorageDTO.class, type).get())
+          .onErrorMap(Exceptions::isRetryExhausted, error -> ExceptionSupplier.retryExhausted(error).get());
     }
     return Mono.just(storageCache.get(type).get(randomElementIndex(storageCache.get(type).size())));
   }
 
   private int randomElementIndex(int size) {
-    return RANDOM.nextInt(size);
+    return size > 0 ? RANDOM.nextInt(size) : size;
   }
 
-  public Mono<StorageDTO> getById(long id) {
+  public Mono<GetStorageDTO> getById(long id) {
     return storageServiceClient.getById(id)
-        .onErrorMap(Exceptions::isRetryExhausted,
-            error -> new IllegalStateException(String.format("Retry to gat storage by id '%d' is exhausted", id), error));
+        .onErrorMap(Exceptions::isRetryExhausted, error -> ExceptionSupplier.retryExhausted(error).get());
   }
 }

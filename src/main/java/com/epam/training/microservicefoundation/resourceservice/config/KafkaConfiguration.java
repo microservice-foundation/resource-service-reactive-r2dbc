@@ -3,8 +3,8 @@ package com.epam.training.microservicefoundation.resourceservice.config;
 import com.epam.training.microservicefoundation.resourceservice.config.properties.TopicProperties;
 import com.epam.training.microservicefoundation.resourceservice.kafka.consumer.KafkaConsumer;
 import com.epam.training.microservicefoundation.resourceservice.kafka.producer.KafkaProducer;
-import com.epam.training.microservicefoundation.resourceservice.model.ResourceProcessedEvent;
-import com.epam.training.microservicefoundation.resourceservice.service.ResourceService;
+import com.epam.training.microservicefoundation.resourceservice.model.event.ResourceProcessedEvent;
+import com.epam.training.microservicefoundation.resourceservice.service.implementation.PermanentResourceService;
 import com.epam.training.microservicefoundation.resourceservice.service.implementation.ResourceProcessedEventListener;
 import java.util.Collections;
 import java.util.Map;
@@ -44,9 +44,9 @@ public class KafkaConfiguration {
 
   @Bean
   public KafkaConsumer kafkaConsumer(DeadLetterPublishingRecoverer deadLetterPublishingRecoverer, RetryProperties retryProperties,
-      KafkaProperties kafkaProperties, TopicProperties topicProperties, ResourceService resourceService) {
+      KafkaProperties kafkaProperties, TopicProperties topicProperties, PermanentResourceService permanentResourceService) {
     return new KafkaConsumer(deadLetterPublishingRecoverer, retryProperties, Pair.of(resourcePermanentConsumer(kafkaProperties,
-        topicProperties), new ResourceProcessedEventListener(resourceService)));
+        topicProperties), new ResourceProcessedEventListener(permanentResourceService)));
   }
 
   private ReactiveKafkaConsumerTemplate<String, ResourceProcessedEvent> resourcePermanentConsumer(KafkaProperties kafkaProperties,

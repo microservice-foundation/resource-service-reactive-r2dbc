@@ -1,6 +1,8 @@
 package com.epam.training.microservicefoundation.resourceservice.config;
 
-import com.epam.training.microservicefoundation.resourceservice.api.ResourceExceptionHandler;
+import com.epam.training.microservicefoundation.resourceservice.handler.ResourceExceptionHandler;
+import com.epam.training.microservicefoundation.resourceservice.validator.QueryParamValidator;
+import com.epam.training.microservicefoundation.resourceservice.validator.RequestQueryParamValidator;
 import org.springframework.boot.autoconfigure.web.WebProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.reactive.error.DefaultErrorAttributes;
@@ -57,5 +59,10 @@ public class WebFluxConfiguration implements WebFluxConfigurer {
         non-file parts are rejected with DataBufferLimitException.
         */
     configurer.defaultCodecs().maxInMemorySize(512 * 1024);
+  }
+
+  @Bean
+  public RequestQueryParamValidator requestQueryParamValidator(QueryParamValidator idQueryParamValidator) {
+    return new RequestQueryParamValidator(idQueryParamValidator);
   }
 }

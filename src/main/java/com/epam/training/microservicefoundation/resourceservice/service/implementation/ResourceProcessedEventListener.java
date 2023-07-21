@@ -1,19 +1,18 @@
 package com.epam.training.microservicefoundation.resourceservice.service.implementation;
 
-import com.epam.training.microservicefoundation.resourceservice.model.ResourceProcessedEvent;
+import com.epam.training.microservicefoundation.resourceservice.model.event.ResourceProcessedEvent;
 import com.epam.training.microservicefoundation.resourceservice.service.ReactiveKafkaEventListener;
-import com.epam.training.microservicefoundation.resourceservice.service.ResourceService;
 import reactor.core.publisher.Mono;
 
 public class ResourceProcessedEventListener implements ReactiveKafkaEventListener<ResourceProcessedEvent> {
-  private final ResourceService service;
+  private final PermanentResourceService permanentResourceService;
 
-  public ResourceProcessedEventListener(ResourceService service) {
-    this.service = service;
+  public ResourceProcessedEventListener(PermanentResourceService permanentResourceService) {
+    this.permanentResourceService = permanentResourceService;
   }
 
   @Override
   public Mono<Void> eventListened(ResourceProcessedEvent event) {
-    return service.moveToPermanent(event);
+    return permanentResourceService.saveToPermanent(event);
   }
 }

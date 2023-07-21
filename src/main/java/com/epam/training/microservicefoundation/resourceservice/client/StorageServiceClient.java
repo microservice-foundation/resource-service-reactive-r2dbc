@@ -1,7 +1,7 @@
 package com.epam.training.microservicefoundation.resourceservice.client;
 
-import com.epam.training.microservicefoundation.resourceservice.model.StorageDTO;
-import com.epam.training.microservicefoundation.resourceservice.model.StorageType;
+import com.epam.training.microservicefoundation.resourceservice.model.dto.GetStorageDTO;
+import com.epam.training.microservicefoundation.resourceservice.model.dto.StorageType;
 import java.time.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +25,7 @@ public class StorageServiceClient {
     this.retryProperties = retryProperties;
   }
 
-  public Flux<StorageDTO> getByType(StorageType type) {
+  public Flux<GetStorageDTO> getByType(StorageType type) {
     log.info("Sending a request to get storages by type '{}'", type);
     return webClient.get()
         .uri(uriBuilder -> uriBuilder.path(PATH_STORAGES)
@@ -33,12 +33,12 @@ public class StorageServiceClient {
             .build())
         .accept(MediaType.APPLICATION_JSON)
         .retrieve()
-        .bodyToFlux(StorageDTO.class)
+        .bodyToFlux(GetStorageDTO.class)
         .retryWhen(Retry.backoff(retryProperties.getMaxAttempts(), Duration.ofMillis(retryProperties.getInitialInterval()))
             .doBeforeRetry(retrySignal -> log.info("Retrying request: attempt {}", retrySignal.totalRetriesInARow())));
   }
 
-  public Mono<StorageDTO> getById(long id) {
+  public Mono<GetStorageDTO> getById(long id) {
     log.info("Sending a request to get storage by id '{}'", id);
     return webClient.get()
         .uri(uriBuilder -> uriBuilder
@@ -46,7 +46,7 @@ public class StorageServiceClient {
             .path(PATH_ID)
             .build(id))
         .retrieve()
-        .bodyToMono(StorageDTO.class)
+        .bodyToMono(GetStorageDTO.class)
         .retryWhen(Retry.backoff(retryProperties.getMaxAttempts(), Duration.ofMillis(retryProperties.getInitialInterval()))
             .doBeforeRetry(retrySignal -> log.info("Retrying request: attempt {}", retrySignal.totalRetriesInARow())));
   }
