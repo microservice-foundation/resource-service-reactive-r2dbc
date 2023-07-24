@@ -5,6 +5,7 @@ import com.epam.training.microservicefoundation.resourceservice.model.dto.Storag
 import java.time.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cloud.client.circuitbreaker.ReactiveCircuitBreaker;
 import org.springframework.cloud.config.client.RetryProperties;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -19,10 +20,12 @@ public class StorageServiceClient {
   private static final String QUERY_PARAM_TYPE = "type";
   private final WebClient webClient;
   private final RetryProperties retryProperties;
+  private final ReactiveCircuitBreaker reactiveCircuitBreaker;
 
-  public StorageServiceClient(WebClient webClient, RetryProperties retryProperties) {
+  public StorageServiceClient(WebClient webClient, RetryProperties retryProperties, ReactiveCircuitBreaker reactiveCircuitBreaker) {
     this.webClient = webClient;
     this.retryProperties = retryProperties;
+    this.reactiveCircuitBreaker = reactiveCircuitBreaker;
   }
 
   public Flux<GetStorageDTO> getByType(StorageType type) {
@@ -34,6 +37,7 @@ public class StorageServiceClient {
         .accept(MediaType.APPLICATION_JSON)
         .retrieve()
         .bodyToFlux(GetStorageDTO.class)
+        .transform(reactiveCircuitBreaker::run)
         .retryWhen(Retry.backoff(retryProperties.getMaxAttempts(), Duration.ofMillis(retryProperties.getInitialInterval()))
             .doBeforeRetry(retrySignal -> log.info("Retrying request: attempt {}", retrySignal.totalRetriesInARow())));
   }
@@ -47,6 +51,7 @@ public class StorageServiceClient {
             .build(id))
         .retrieve()
         .bodyToMono(GetStorageDTO.class)
+        .transform(reactiveCircuitBreaker::run)
         .retryWhen(Retry.backoff(retryProperties.getMaxAttempts(), Duration.ofMillis(retryProperties.getInitialInterval()))
             .doBeforeRetry(retrySignal -> log.info("Retrying request: attempt {}", retrySignal.totalRetriesInARow())));
   }

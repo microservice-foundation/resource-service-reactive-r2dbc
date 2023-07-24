@@ -25,4 +25,6 @@ eureka:
     instance-id: ${spring.application.name}:${random.int}
     lease-renewal-interval-in-seconds: 10
     preferIpAddress: true
-management.endpoints.web.exposure.include: health, info, refresh
+management:
+  endpoints.web.exposure.include: health, info, refresh
+  health.circuitbreakers.enabled: true
