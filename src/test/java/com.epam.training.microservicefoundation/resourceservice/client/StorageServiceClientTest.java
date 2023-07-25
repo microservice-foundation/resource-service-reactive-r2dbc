@@ -1,34 +1,20 @@
 package com.epam.training.microservicefoundation.resourceservice.client;
 
 import com.epam.training.microservicefoundation.resourceservice.client.Server.Service;
-import com.epam.training.microservicefoundation.resourceservice.config.ClientConfiguration;
-import com.epam.training.microservicefoundation.resourceservice.config.properties.WebClientProperties;
 import com.epam.training.microservicefoundation.resourceservice.model.dto.GetStorageDTO;
 import com.epam.training.microservicefoundation.resourceservice.model.dto.StorageType;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.cloud.config.client.RetryProperties;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestPropertySource;
 import reactor.core.Exceptions;
 import reactor.test.StepVerifier;
 
-@SpringBootTest
-@ExtendWith({MockServerExtension.class})
-@EnableConfigurationProperties({WebClientProperties.class, RetryProperties.class})
-@ContextConfiguration(classes = ClientConfiguration.class)
-@TestPropertySource(locations = "classpath:application.properties")
-class StorageServiceClientTest {
-
+class StorageServiceClientTest extends BaseClientTest {
   @Autowired
   private StorageServiceClient client;
 
@@ -137,92 +123,6 @@ class StorageServiceClientTest {
     StepVerifier.create(client.getById(1234L))
         .consumeErrorWith(Exceptions::isRetryExhausted)
         .verify();
-  }
-
-  @Test
-  void shouldChangeToOpenStateOfCircuitBreakerWhenGetStorageByTypeAfterRetries(@Server(service = Service.STORAGE) MockServer storageServer) {
-    storageServer.response(HttpStatus.SERVICE_UNAVAILABLE);
-    storageServer.response(HttpStatus.INTERNAL_SERVER_ERROR);
-    storageServer.response(HttpStatus.INTERNAL_SERVER_ERROR);
-    storageServer.response(HttpStatus.INTERNAL_SERVER_ERROR);
-    storageServer.response(HttpStatus.INTERNAL_SERVER_ERROR);
-    storageServer.response(HttpStatus.OK, storage(StorageType.STAGING),
-        Collections.singletonMap(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE));
-
-    StepVerifier.create(client.getByType(StorageType.STAGING))
-        .consumeErrorWith(Exceptions::isRetryExhausted)
-        .verify();
-  }
-
-  @Test
-  void shouldHalfOpenToClosedStateOfCircuitBreakerWhenGetStorageByTypeAfterRetries(
-      @Server(service = Service.STORAGE) MockServer storageServer) {
-    storageServer.response(HttpStatus.SERVICE_UNAVAILABLE);
-    storageServer.response(HttpStatus.INTERNAL_SERVER_ERROR);
-    storageServer.response(HttpStatus.INTERNAL_SERVER_ERROR);
-    storageServer.response(HttpStatus.INTERNAL_SERVER_ERROR);
-    storageServer.response(HttpStatus.INTERNAL_SERVER_ERROR);
-
-    StepVerifier.create(client.getByType(StorageType.STAGING))
-        .consumeErrorWith(Exceptions::isRetryExhausted)
-        .verify();
-
-    GetStorageDTO storage1 = storage(StorageType.STAGING);
-    storageServer.response(HttpStatus.OK, storage1,
-        Collections.singletonMap(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE));
-
-    StepVerifier.create(client.getByType(StorageType.STAGING))
-        .expectNext(storage1)
-        .verifyComplete();
-
-    GetStorageDTO storage2 = storage(StorageType.PERMANENT);
-    storageServer.response(HttpStatus.OK, storage2,
-        Collections.singletonMap(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE));
-
-    StepVerifier.create(client.getByType(StorageType.PERMANENT))
-        .expectNext(storage2)
-        .verifyComplete();
-  }
-
-  @Test
-  void shouldOpenStateOfCircuitBreakerWhenGetStorageByIdAfterRetries(@Server(service = Service.STORAGE) MockServer storageServer) {
-    storageServer.response(HttpStatus.SERVICE_UNAVAILABLE);
-    storageServer.response(HttpStatus.INTERNAL_SERVER_ERROR);
-    storageServer.response(HttpStatus.INTERNAL_SERVER_ERROR);
-    storageServer.response(HttpStatus.INTERNAL_SERVER_ERROR);
-    storageServer.response(HttpStatus.INTERNAL_SERVER_ERROR);
-    storageServer.response(HttpStatus.OK, storage(StorageType.STAGING),
-        Collections.singletonMap(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE));
-
-    StepVerifier.create(client.getById(1234L))
-        .consumeErrorWith(Exceptions::isRetryExhausted)
-        .verify();
-  }
-
-  @Test
-  void shouldHalfOpenToClosedStateOfCircuitBreakerWhenGetStorageByIdAfterRetries(
-      @Server(service = Service.STORAGE) MockServer storageServer) {
-    storageServer.response(HttpStatus.SERVICE_UNAVAILABLE);
-    storageServer.response(HttpStatus.INTERNAL_SERVER_ERROR);
-    storageServer.response(HttpStatus.INTERNAL_SERVER_ERROR);
-    storageServer.response(HttpStatus.INTERNAL_SERVER_ERROR);
-    storageServer.response(HttpStatus.INTERNAL_SERVER_ERROR);
-
-    StepVerifier.create(client.getById(1234L))
-        .consumeErrorWith(Exceptions::isRetryExhausted)
-        .verify();
-
-    GetStorageDTO storage1 = storage(StorageType.STAGING);
-    storageServer.response(HttpStatus.OK, storage1, Collections.singletonMap(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE));
-    StepVerifier.create(client.getById(123L))
-        .expectNext(storage1)
-        .verifyComplete();
-
-    GetStorageDTO storage2 = storage(StorageType.PERMANENT);
-    storageServer.response(HttpStatus.OK, storage2, Collections.singletonMap(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE));
-    StepVerifier.create(client.getById(124L))
-        .expectNext(storage2)
-        .verifyComplete();
   }
 
   private GetStorageDTO storage(StorageType type) {

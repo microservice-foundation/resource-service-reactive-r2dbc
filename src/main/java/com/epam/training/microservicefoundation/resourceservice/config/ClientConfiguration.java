@@ -9,7 +9,6 @@ import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cloud.circuitbreaker.resilience4j.ReactiveResilience4JCircuitBreakerFactory;
-import org.springframework.cloud.client.circuitbreaker.ReactiveCircuitBreaker;
 import org.springframework.cloud.client.loadbalancer.reactive.ReactorLoadBalancerExchangeFilterFunction;
 import org.springframework.cloud.config.client.RetryProperties;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
@@ -43,12 +42,7 @@ public class ClientConfiguration {
 
   @Bean
   public StorageServiceClient storageServiceClient(WebClient webClient, RetryProperties retryProperties,
-      ReactiveCircuitBreaker circuitBreaker) {
-    return new StorageServiceClient(webClient, retryProperties, circuitBreaker);
-  }
-
-  @Bean
-  public ReactiveCircuitBreaker circuitBreaker(ReactiveResilience4JCircuitBreakerFactory circuitBreakerFactory) {
-    return circuitBreakerFactory.create("default");
+      ReactiveResilience4JCircuitBreakerFactory circuitBreakerFactory) {
+    return new StorageServiceClient(webClient, retryProperties, circuitBreakerFactory.create("storage-service"));
   }
 }
