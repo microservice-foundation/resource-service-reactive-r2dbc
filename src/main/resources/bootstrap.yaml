@@ -26,5 +26,7 @@ eureka:
     lease-renewal-interval-in-seconds: 10
     preferIpAddress: true
 management:
-  endpoints.web.exposure.include: health, info, refresh
+  endpoints:
+    web.exposure.include: health, info, refresh, circuitbreakerevents, circuitbreakers
+    health.show-details: always
   health.circuitbreakers.enabled: true
