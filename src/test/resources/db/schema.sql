@@ -4,8 +4,10 @@ CREATE SEQUENCE IF NOT EXISTS RESOURCES_SEQUENCE as bigint;
 
 CREATE TABLE IF NOT EXISTS RESOURCES(
     "id" bigint PRIMARY KEY DEFAULT nextval('RESOURCES_SEQUENCE'),
-    "key" varchar(36) NOT NULL,
+    "key" varchar(100) NOT NULL,
     "name" varchar(100) NOT NULL UNIQUE,
+    "status" varchar(50) NOT NULL,
+    "storage_id" bigint NOT NULL,
     "last_modified_date" TIMESTAMP,
     "created_date" TIMESTAMP NOT NULL
 );
