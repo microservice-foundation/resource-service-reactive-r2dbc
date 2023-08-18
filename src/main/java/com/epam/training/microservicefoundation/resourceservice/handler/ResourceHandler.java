@@ -31,6 +31,7 @@ public class ResourceHandler {
   private final BaseResourceService baseService;
   private final StageResourceService stageResourceService;
   private final RequestQueryParamValidator idQueryParamValidator;
+
   @Autowired
   public ResourceHandler(BaseResourceService baseService, StageResourceService stageResourceService,
       RequestQueryParamValidator idQueryParamValidator) {
@@ -60,23 +61,14 @@ public class ResourceHandler {
 
   public Mono<ServerResponse> getById(final ServerRequest request) {
     log.info("Incoming request: {}", request);
-    long id = Long.parseLong(request.pathVariable("id"));
+    final long id = Long.parseLong(request.pathVariable("id"));
     return baseService.getById(id)
         .flatMap(responsePublisher -> ServerResponse.ok()
             .header(HttpHeaders.CONTENT_TYPE, responsePublisher.response().contentType())
             .header(HttpHeaders.CONTENT_LENGTH, Long.toString(responsePublisher.response().contentLength()))
-            .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + getMetadataItem(responsePublisher.response(),
-                "filename", "UNKNOWN") + "\"")
+            .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + responsePublisher.response().metadata()
+                    .getOrDefault("filename", "UNKNOWN") + "\"")
             .body(Flux.from(responsePublisher), ByteBuffer.class));
-  }
-
-  private String getMetadataItem(final GetObjectResponse sdkResponse, final String key, final String defaultValue) {
-    for (Map.Entry<String, String> entry : sdkResponse.metadata().entrySet()) {
-      if (entry.getKey().equalsIgnoreCase(key)) {
-        return entry.getValue();
-      }
-    }
-    return defaultValue;
   }
 
   private Long[] getIds(final String paramValue) {

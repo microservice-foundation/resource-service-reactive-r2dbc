@@ -21,10 +21,6 @@ class StorageServiceClientCircuitBreakerTest extends BaseClientTest {
     storageServer.response(HttpStatus.SERVICE_UNAVAILABLE);
     storageServer.response(HttpStatus.INTERNAL_SERVER_ERROR);
     storageServer.response(HttpStatus.INTERNAL_SERVER_ERROR);
-    storageServer.response(HttpStatus.INTERNAL_SERVER_ERROR);
-    storageServer.response(HttpStatus.INTERNAL_SERVER_ERROR);
-    storageServer.response(HttpStatus.OK, storage(StorageType.STAGING),
-        Collections.singletonMap(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE));
 
     StepVerifier.create(client.getById(1234L))
         .consumeErrorWith(Exceptions::isRetryExhausted)
@@ -37,13 +33,12 @@ class StorageServiceClientCircuitBreakerTest extends BaseClientTest {
     storageServer.response(HttpStatus.SERVICE_UNAVAILABLE);
     storageServer.response(HttpStatus.INTERNAL_SERVER_ERROR);
     storageServer.response(HttpStatus.INTERNAL_SERVER_ERROR);
-    storageServer.response(HttpStatus.INTERNAL_SERVER_ERROR);
-    storageServer.response(HttpStatus.INTERNAL_SERVER_ERROR);
 
     StepVerifier.create(client.getById(1234L))
         .consumeErrorWith(Exceptions::isRetryExhausted)
         .verify();
 
+    storageServer.response(HttpStatus.BAD_REQUEST);
     GetStorageDTO storage1 = storage(StorageType.STAGING);
     storageServer.response(HttpStatus.OK, storage1, Collections.singletonMap(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE));
     StepVerifier.create(client.getById(123L))
