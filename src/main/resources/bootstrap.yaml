@@ -30,3 +30,6 @@ management:
     web.exposure.include: health, info, refresh, circuitbreakerevents, circuitbreakers
     health.show-details: always
   health.circuitbreakers.enabled: true
+  tracing:
+    sampling.probability: 1.0
+    propagation.type: b3
