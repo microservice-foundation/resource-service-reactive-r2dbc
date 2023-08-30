@@ -32,8 +32,9 @@ public class ClientConfiguration {
   }
 
   @Bean
-  public WebClient webClient(ReactorLoadBalancerExchangeFilterFunction loadBalancerExchangeFilterFunction, WebClientProperties properties) {
-    return WebClient.builder()
+  public WebClient webClient(WebClient.Builder webClientBuilder,
+      ReactorLoadBalancerExchangeFilterFunction loadBalancerExchangeFilterFunction, WebClientProperties properties) {
+    return webClientBuilder
         .baseUrl(properties.getBaseUrl())
         .filter(loadBalancerExchangeFilterFunction)
         .clientConnector(new ReactorClientHttpConnector(httpClient(properties)))

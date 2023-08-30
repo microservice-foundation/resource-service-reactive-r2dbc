@@ -50,23 +50,23 @@
             </encoder>
         </appender>
 
-        <logger level="DEBUG" name="org.springframework.r2dbc" additivity="false">
-            <appender-ref ref="jsonConsoleAppender"/>
-        </logger>
+<!--        <logger level="DEBUG" name="org.springframework.r2dbc" additivity="false">-->
+<!--            <appender-ref ref="jsonConsoleAppender"/>-->
+<!--        </logger>-->
 
-        <logger level="DEBUG" name="io.github.resilience4j" additivity="false">
-            <appender-ref ref="jsonConsoleAppender"/>
-        </logger>
+<!--        <logger level="DEBUG" name="io.github.resilience4j" additivity="false">-->
+<!--            <appender-ref ref="jsonConsoleAppender"/>-->
+<!--        </logger>-->
 
-        <logger level="INFO" name="org.springframework.kafka" additivity="false">
-            <appender-ref ref="jsonConsoleAppender"/>
-        </logger>
+<!--        <logger level="INFO" name="org.springframework.kafka" additivity="false">-->
+<!--            <appender-ref ref="jsonConsoleAppender"/>-->
+<!--        </logger>-->
 
-        <logger level="INFO" name="org.apache.kafka" additivity="false">
-            <appender-ref ref="jsonConsoleAppender"/>
-        </logger>
+<!--        <logger level="INFO" name="org.apache.kafka" additivity="false">-->
+<!--            <appender-ref ref="jsonConsoleAppender"/>-->
+<!--        </logger>-->
 
-        <root level="DEBUG">
+        <root level="INFO">
             <appender-ref ref="jsonConsoleAppender"/>
         </root>
     </springProfile>
