@@ -6,6 +6,7 @@ import com.epam.training.microservicefoundation.resourceservice.kafka.producer.K
 import com.epam.training.microservicefoundation.resourceservice.model.event.ResourceProcessedEvent;
 import com.epam.training.microservicefoundation.resourceservice.service.implementation.PermanentResourceService;
 import com.epam.training.microservicefoundation.resourceservice.service.implementation.ResourceProcessedEventListener;
+import io.micrometer.observation.ObservationRegistry;
 import java.util.Collections;
 import java.util.Map;
 import java.util.function.Function;
@@ -38,15 +39,16 @@ public class KafkaConfiguration {
 
   @Bean
   public KafkaProducer kafkaProducer(ReactiveKafkaProducerTemplate<String, Object> kafkaProducerTemplate, Map<Class<?>,
-      Pair<String, Function<Object, ProducerRecord<String, Object>>>> publicationTopics) {
-    return new KafkaProducer(kafkaProducerTemplate, publicationTopics);
+      Pair<String, Function<Object, ProducerRecord<String, Object>>>> publicationTopics, ObservationRegistry registry) {
+    return new KafkaProducer(kafkaProducerTemplate, publicationTopics, registry);
   }
 
   @Bean
   public KafkaConsumer kafkaConsumer(DeadLetterPublishingRecoverer deadLetterPublishingRecoverer, RetryProperties retryProperties,
-      KafkaProperties kafkaProperties, TopicProperties topicProperties, PermanentResourceService permanentResourceService) {
+      KafkaProperties kafkaProperties, TopicProperties topicProperties, PermanentResourceService permanentResourceService,
+      ObservationRegistry registry) {
     return new KafkaConsumer(deadLetterPublishingRecoverer, retryProperties, Pair.of(resourcePermanentConsumer(kafkaProperties,
-        topicProperties), new ResourceProcessedEventListener(permanentResourceService)));
+        topicProperties), new ResourceProcessedEventListener(permanentResourceService)), registry);
   }
 
   private ReactiveKafkaConsumerTemplate<String, ResourceProcessedEvent> resourcePermanentConsumer(KafkaProperties kafkaProperties,
