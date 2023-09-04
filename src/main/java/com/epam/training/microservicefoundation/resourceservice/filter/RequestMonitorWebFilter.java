@@ -2,8 +2,6 @@ package com.epam.training.microservicefoundation.resourceservice.filter;
 
 import static java.util.Optional.ofNullable;
 
-import io.micrometer.context.ContextSnapshotFactory;
-import io.micrometer.observation.contextpropagation.ObservationThreadLocalAccessor;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,10 +19,6 @@ public class RequestMonitorWebFilter implements WebFilter {
   public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
     final long startTime = System.currentTimeMillis();
     return chain.filter(exchange)
-        .contextWrite(context -> {
-          ContextSnapshotFactory.builder().build().setThreadLocalsFrom(context, ObservationThreadLocalAccessor.KEY);
-          return context;
-        })
         .doFinally(signalType -> {
           final long endTime = System.currentTimeMillis();
           final long executionTime = endTime - startTime;
