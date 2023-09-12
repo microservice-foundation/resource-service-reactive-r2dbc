@@ -1,6 +1,6 @@
 package com.epam.training.microservicefoundation.resourceservice.repository;
 
-import com.epam.training.microservicefoundation.resourceservice.model.entity.Resource;
+import com.epam.training.microservicefoundation.resourceservice.domain.entity.Resource;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;

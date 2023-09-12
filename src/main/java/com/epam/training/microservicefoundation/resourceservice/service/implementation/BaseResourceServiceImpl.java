@@ -1,10 +1,10 @@
 package com.epam.training.microservicefoundation.resourceservice.service.implementation;
 
-import com.epam.training.microservicefoundation.resourceservice.mapper.DeleteResourceMapper;
-import com.epam.training.microservicefoundation.resourceservice.model.context.BaseContext;
-import com.epam.training.microservicefoundation.resourceservice.model.dto.DeleteResourceDTO;
-import com.epam.training.microservicefoundation.resourceservice.model.entity.Resource;
-import com.epam.training.microservicefoundation.resourceservice.model.exception.ExceptionSupplier;
+import com.epam.training.microservicefoundation.resourceservice.service.mapper.DeleteResourceMapper;
+import com.epam.training.microservicefoundation.resourceservice.domain.context.BaseContext;
+import com.epam.training.microservicefoundation.resourceservice.domain.dto.DeleteResourceDTO;
+import com.epam.training.microservicefoundation.resourceservice.domain.entity.Resource;
+import com.epam.training.microservicefoundation.resourceservice.domain.exception.ExceptionSupplier;
 import com.epam.training.microservicefoundation.resourceservice.repository.CloudStorageRepository;
 import com.epam.training.microservicefoundation.resourceservice.repository.ResourceRepository;
 import com.epam.training.microservicefoundation.resourceservice.service.BaseResourceService;

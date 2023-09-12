@@ -7,11 +7,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.epam.training.microservicefoundation.resourceservice.common.CloudStorageExtension;
 import com.epam.training.microservicefoundation.resourceservice.common.FakeFilePart;
-import com.epam.training.microservicefoundation.resourceservice.config.AwsS3Configuration;
-import com.epam.training.microservicefoundation.resourceservice.config.properties.S3ClientConfigurationProperties;
-import com.epam.training.microservicefoundation.resourceservice.model.ResourceFile;
-import com.epam.training.microservicefoundation.resourceservice.model.dto.GetStorageDTO;
-import com.epam.training.microservicefoundation.resourceservice.model.dto.StorageType;
+import com.epam.training.microservicefoundation.resourceservice.configuration.AwsS3Configuration;
+import com.epam.training.microservicefoundation.resourceservice.configuration.properties.S3ClientConfigurationProperties;
+import com.epam.training.microservicefoundation.resourceservice.domain.ResourceFile;
+import com.epam.training.microservicefoundation.resourceservice.domain.dto.GetStorageDTO;
+import com.epam.training.microservicefoundation.resourceservice.domain.dto.StorageType;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;

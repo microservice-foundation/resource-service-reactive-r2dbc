@@ -1,9 +1,12 @@
 package com.epam.training.microservicefoundation.resourceservice.kafka.consumer;
 
-import com.epam.training.microservicefoundation.resourceservice.model.event.ResourceProcessedEvent;
-import com.epam.training.microservicefoundation.resourceservice.model.exception.ReceiverRecordException;
+import com.epam.training.microservicefoundation.resourceservice.domain.event.ResourceProcessedEvent;
+import com.epam.training.microservicefoundation.resourceservice.domain.exception.ReceiverRecordException;
 import com.epam.training.microservicefoundation.resourceservice.service.ReactiveKafkaEventListener;
 import com.epam.training.microservicefoundation.resourceservice.service.implementation.ResourceProcessedEventListener;
+import io.micrometer.observation.Observation;
+import io.micrometer.observation.ObservationRegistry;
+import io.micrometer.observation.contextpropagation.ObservationThreadLocalAccessor;
 import java.time.Duration;
 import java.util.function.Function;
 import org.slf4j.Logger;
@@ -14,8 +17,10 @@ import org.springframework.context.event.EventListener;
 import org.springframework.data.util.Pair;
 import org.springframework.kafka.core.reactive.ReactiveKafkaConsumerTemplate;
 import org.springframework.kafka.listener.DeadLetterPublishingRecoverer;
+import org.springframework.kafka.support.micrometer.KafkaRecordReceiverContext;
 import reactor.core.publisher.Mono;
 import reactor.kafka.receiver.ReceiverRecord;
+import reactor.util.context.Context;
 import reactor.util.retry.Retry;
 
 public class KafkaConsumer {
@@ -24,12 +29,15 @@ public class KafkaConsumer {
   private final RetryProperties retryProperties;
   private final Pair<ReactiveKafkaConsumerTemplate<String, ResourceProcessedEvent>, ResourceProcessedEventListener>
       resourceProcessedEventListener;
+  private final ObservationRegistry registry;
 
   public KafkaConsumer(DeadLetterPublishingRecoverer deadLetterPublishingRecoverer, RetryProperties retryProperties,
-      Pair<ReactiveKafkaConsumerTemplate<String, ResourceProcessedEvent>, ResourceProcessedEventListener> resourceProcessedEventListener) {
+      Pair<ReactiveKafkaConsumerTemplate<String, ResourceProcessedEvent>, ResourceProcessedEventListener> resourceProcessedEventListener,
+      ObservationRegistry registry) {
     this.resourceProcessedEventListener = resourceProcessedEventListener;
     this.deadLetterPublishingRecoverer = deadLetterPublishingRecoverer;
     this.retryProperties = retryProperties;
+    this.registry = registry;
   }
 
   @EventListener(ApplicationStartedEvent.class)
@@ -67,6 +75,9 @@ public class KafkaConsumer {
   }
 
   private <T> Mono<?> handler(ReactiveKafkaEventListener<T> eventListener, ReceiverRecord<String, T> receiverRecord) {
-    return eventListener.eventListened(receiverRecord.value());
+    final Observation observation = Observation.createNotStarted("kafka consumer",
+        () -> new KafkaRecordReceiverContext(receiverRecord, null, () -> null), registry);
+    return observation.observe(() -> Mono.defer(() -> eventListener.eventListened(receiverRecord.value()))
+        .contextWrite(Context.of(ObservationThreadLocalAccessor.KEY, observation)));
   }
 }

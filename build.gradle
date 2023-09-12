@@ -14,7 +14,7 @@ repositories {
 
 group = 'com.epam.training'
 version = '1.0'
-sourceCompatibility = '11'
+sourceCompatibility = '17'
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
@@ -31,6 +31,8 @@ dependencies {
     implementation 'software.amazon.awssdk:netty-nio-client'
     implementation "software.amazon.awssdk:core:${amazonSdkVersion}"
     implementation "org.mapstruct:mapstruct:${mapstructVersion}"
+    implementation "net.logstash.logback:logstash-logback-encoder:${logstashLogbackVersion}"
+    implementation "io.micrometer:micrometer-tracing-bridge-brave:${micrometerVersion}"
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"

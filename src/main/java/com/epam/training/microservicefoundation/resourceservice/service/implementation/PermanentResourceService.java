@@ -1,11 +1,11 @@
 package com.epam.training.microservicefoundation.resourceservice.service.implementation;
 
-import com.epam.training.microservicefoundation.resourceservice.model.context.ResourcePermanentContext;
-import com.epam.training.microservicefoundation.resourceservice.model.dto.StorageType;
-import com.epam.training.microservicefoundation.resourceservice.model.entity.Resource;
-import com.epam.training.microservicefoundation.resourceservice.model.entity.ResourceStatus;
-import com.epam.training.microservicefoundation.resourceservice.model.event.ResourceProcessedEvent;
-import com.epam.training.microservicefoundation.resourceservice.model.exception.ExceptionSupplier;
+import com.epam.training.microservicefoundation.resourceservice.domain.context.ResourcePermanentContext;
+import com.epam.training.microservicefoundation.resourceservice.domain.dto.StorageType;
+import com.epam.training.microservicefoundation.resourceservice.domain.entity.Resource;
+import com.epam.training.microservicefoundation.resourceservice.domain.entity.ResourceStatus;
+import com.epam.training.microservicefoundation.resourceservice.domain.event.ResourceProcessedEvent;
+import com.epam.training.microservicefoundation.resourceservice.domain.exception.ExceptionSupplier;
 import com.epam.training.microservicefoundation.resourceservice.repository.CloudStorageRepository;
 import com.epam.training.microservicefoundation.resourceservice.repository.ResourceRepository;
 import org.slf4j.Logger;
