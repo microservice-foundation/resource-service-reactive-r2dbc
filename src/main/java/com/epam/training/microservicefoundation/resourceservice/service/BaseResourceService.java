@@ -1,6 +1,6 @@
 package com.epam.training.microservicefoundation.resourceservice.service;
 
-import com.epam.training.microservicefoundation.resourceservice.model.dto.DeleteResourceDTO;
+import com.epam.training.microservicefoundation.resourceservice.domain.dto.DeleteResourceDTO;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import software.amazon.awssdk.core.async.ResponsePublisher;

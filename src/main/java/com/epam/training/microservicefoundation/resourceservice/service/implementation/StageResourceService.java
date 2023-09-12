@@ -1,15 +1,15 @@
 package com.epam.training.microservicefoundation.resourceservice.service.implementation;
 
 import com.epam.training.microservicefoundation.resourceservice.kafka.producer.KafkaProducer;
-import com.epam.training.microservicefoundation.resourceservice.mapper.GetResourceMapper;
-import com.epam.training.microservicefoundation.resourceservice.model.ResourceFile;
-import com.epam.training.microservicefoundation.resourceservice.model.context.ResourceStagingContext;
-import com.epam.training.microservicefoundation.resourceservice.model.dto.GetResourceDTO;
-import com.epam.training.microservicefoundation.resourceservice.model.dto.StorageType;
-import com.epam.training.microservicefoundation.resourceservice.model.entity.Resource;
-import com.epam.training.microservicefoundation.resourceservice.model.entity.ResourceStatus;
-import com.epam.training.microservicefoundation.resourceservice.model.event.ResourceStagedEvent;
-import com.epam.training.microservicefoundation.resourceservice.model.exception.ExceptionSupplier;
+import com.epam.training.microservicefoundation.resourceservice.service.mapper.GetResourceMapper;
+import com.epam.training.microservicefoundation.resourceservice.domain.ResourceFile;
+import com.epam.training.microservicefoundation.resourceservice.domain.context.ResourceStagingContext;
+import com.epam.training.microservicefoundation.resourceservice.domain.dto.GetResourceDTO;
+import com.epam.training.microservicefoundation.resourceservice.domain.dto.StorageType;
+import com.epam.training.microservicefoundation.resourceservice.domain.entity.Resource;
+import com.epam.training.microservicefoundation.resourceservice.domain.entity.ResourceStatus;
+import com.epam.training.microservicefoundation.resourceservice.domain.event.ResourceStagedEvent;
+import com.epam.training.microservicefoundation.resourceservice.domain.exception.ExceptionSupplier;
 import com.epam.training.microservicefoundation.resourceservice.repository.CloudStorageRepository;
 import com.epam.training.microservicefoundation.resourceservice.repository.ResourceRepository;
 import org.slf4j.Logger;

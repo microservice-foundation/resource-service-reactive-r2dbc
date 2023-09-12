@@ -1,6 +1,6 @@
 package com.epam.training.microservicefoundation.resourceservice.service.implementation;
 
-import com.epam.training.microservicefoundation.resourceservice.model.event.ResourceProcessedEvent;
+import com.epam.training.microservicefoundation.resourceservice.domain.event.ResourceProcessedEvent;
 import com.epam.training.microservicefoundation.resourceservice.service.ReactiveKafkaEventListener;
 import reactor.core.publisher.Mono;
 

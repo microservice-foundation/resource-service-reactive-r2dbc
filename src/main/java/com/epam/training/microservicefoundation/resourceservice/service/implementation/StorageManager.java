@@ -1,9 +1,9 @@
 package com.epam.training.microservicefoundation.resourceservice.service.implementation;
 
-import com.epam.training.microservicefoundation.resourceservice.client.StorageServiceClient;
-import com.epam.training.microservicefoundation.resourceservice.model.dto.GetStorageDTO;
-import com.epam.training.microservicefoundation.resourceservice.model.dto.StorageType;
-import com.epam.training.microservicefoundation.resourceservice.model.exception.ExceptionSupplier;
+import com.epam.training.microservicefoundation.resourceservice.web.client.StorageServiceClient;
+import com.epam.training.microservicefoundation.resourceservice.domain.dto.GetStorageDTO;
+import com.epam.training.microservicefoundation.resourceservice.domain.dto.StorageType;
+import com.epam.training.microservicefoundation.resourceservice.domain.exception.ExceptionSupplier;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

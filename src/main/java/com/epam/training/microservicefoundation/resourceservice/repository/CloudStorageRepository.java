@@ -1,10 +1,10 @@
 package com.epam.training.microservicefoundation.resourceservice.repository;
 
-import com.epam.training.microservicefoundation.resourceservice.config.properties.S3ClientConfigurationProperties;
-import com.epam.training.microservicefoundation.resourceservice.model.ResourceFile;
-import com.epam.training.microservicefoundation.resourceservice.model.UploadState;
-import com.epam.training.microservicefoundation.resourceservice.model.dto.GetStorageDTO;
-import com.epam.training.microservicefoundation.resourceservice.model.exception.ExceptionSupplier;
+import com.epam.training.microservicefoundation.resourceservice.configuration.properties.S3ClientConfigurationProperties;
+import com.epam.training.microservicefoundation.resourceservice.domain.ResourceFile;
+import com.epam.training.microservicefoundation.resourceservice.domain.UploadState;
+import com.epam.training.microservicefoundation.resourceservice.domain.dto.GetStorageDTO;
+import com.epam.training.microservicefoundation.resourceservice.domain.exception.ExceptionSupplier;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.List;
@@ -38,7 +38,6 @@ import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 import software.amazon.awssdk.services.s3.model.UploadPartRequest;
 import software.amazon.awssdk.services.s3.model.UploadPartResponse;
-
 
 public class CloudStorageRepository {
   private static final Logger log = LoggerFactory.getLogger(CloudStorageRepository.class);

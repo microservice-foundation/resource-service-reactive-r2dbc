@@ -3,10 +3,10 @@ package com.epam.training.microservicefoundation.resourceservice.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
-import com.epam.training.microservicefoundation.resourceservice.client.StorageServiceClient;
-import com.epam.training.microservicefoundation.resourceservice.model.dto.GetStorageDTO;
-import com.epam.training.microservicefoundation.resourceservice.model.dto.StorageType;
-import com.epam.training.microservicefoundation.resourceservice.model.exception.EntityNotFoundException;
+import com.epam.training.microservicefoundation.resourceservice.web.client.StorageServiceClient;
+import com.epam.training.microservicefoundation.resourceservice.domain.dto.GetStorageDTO;
+import com.epam.training.microservicefoundation.resourceservice.domain.dto.StorageType;
+import com.epam.training.microservicefoundation.resourceservice.domain.exception.EntityNotFoundException;
 import com.epam.training.microservicefoundation.resourceservice.service.implementation.StorageManager;
 import java.util.Random;
 import org.junit.jupiter.api.Test;

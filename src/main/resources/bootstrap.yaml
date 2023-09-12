@@ -1,3 +1,5 @@
+server.port: 0
+
 spring:
   application:
     name: ${MICROSERVICE_NAME:resource-service-reactive-r2dbc}

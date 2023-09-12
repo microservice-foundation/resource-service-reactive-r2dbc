@@ -34,7 +34,7 @@ public class KafkaProducer {
         final ProducerRecord<String, Object> producerRecord = publicationTopics.get(message.getClass()).getSecond().apply(message);
         final KafkaRecordSenderContext kafkaSenderContext = new KafkaRecordSenderContext(producerRecord, null, () -> null);
         final Observation observation = Observation.createNotStarted("kafka producer", () -> kafkaSenderContext, registry)
-            .parentObservation(contextView.get(ObservationThreadLocalAccessor.KEY));
+            .parentObservation(contextView.getOrDefault(ObservationThreadLocalAccessor.KEY, null));
         return observation.observe(() -> kafkaTemplate.send(producerRecord));
       });
     }

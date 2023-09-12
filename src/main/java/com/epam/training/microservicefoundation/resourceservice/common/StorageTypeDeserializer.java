@@ -1,6 +1,6 @@
 package com.epam.training.microservicefoundation.resourceservice.common;
 
-import com.epam.training.microservicefoundation.resourceservice.model.dto.StorageType;
+import com.epam.training.microservicefoundation.resourceservice.domain.dto.StorageType;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
